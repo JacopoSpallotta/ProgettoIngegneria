@@ -1,0 +1,69 @@
+Lezione11.txt
+
+(forse mancano 20min di lezione)
+(dalla cartella esempi del Drive:
+	esempio 4000-sys-with-csv-plot/src/sys.cpp)
+	
+PARTICOLARITA' DELLA SINTASSI DEL C:
+Definizione di classi e loro implementazione
+puo' essere suddiviso fra file .h e .cpp
+La firma e definizione della classe viene eseguita
+nel file .h nel seguente modo:
+
+class [nomeTipo]{
+	private:
+		type var_1;
+		type var_n;
+		
+		type method_1(arg1, ..., argn);
+		type method_n(arg1, ..., argn);
+	protected:
+		type var_1;
+		type var_n;
+		
+		type method_1(arg1, ..., argn);
+		type method_n(arg1, ..., argn);
+	public:
+		type var_1;
+		type var_n;
+		
+		type method_1(arg1, ..., argn);
+		type method_n(arg1, ..., argn);
+};
+
+mentre nel corrispettivo .cpp ci possono essere 
+le implementazioni dei metodi definiti nella classe.
+la sintassi per la ridefinizione e' la seguente:
+
+type [nomeTipo]::[nomeMetodo](arg1, ..., argn){
+
+	... implementazione....
+}
+
+
+UN CONSIGLIO DA PARTE DEL PROFESSORE PER L'USO DI 
+VAR GLOBALI:
+
+Ricordo che negli esempi piu' basilari le var globali
+venivano definite nel file global.h questo non garantisce
+l'incapsulamento. 
+
+Si possono definire variabili "globali" (che globali 
+non sono piu') in quanto le posso porre come 
+variabili private dentro la classe.
+Solo i metodi relativi alla classe possono accedervi.
+
+
+FILE NOISE.CPP
+contiene una funzione noise() che e' una variabile
+aleatoria uniforme, genera un numero da 0 a 1.
+
+
+.gp estensione di gnuplot: generatore di grafico
+In plot.gp definisici variabili del grafico di output
+come per esempio il nome dell'asse x e y del piano cartesiano,
+gli intervali di interesse etc...
+
+nel prompt gnuplot> load plot.gp
+
+in genere il modello va sempre modellato con Classi

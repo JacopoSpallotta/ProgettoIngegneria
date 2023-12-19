@@ -1,0 +1,43 @@
+Lezione5_ModellareSistemi_in_c++_p2_1810.txt
+
+[CONTINUA DALLA LEZIONE 4]
+
+INIT.CPP
+Sceglie lo stato iniziale degli oggetti del sistema
+solitamente tramite un generatore casuale.
+
+
+NB: NELL'ESEMPIO MOSTRATO A LEZIONE 1000-traffic-light 
+il professore ha posizionato una sfilza di funzioni per la 
+manipolazione del tempo nel file msleep.cpp
+
+int msleep(long msec):
+
+	equivalente allo sleep di sistema
+	imposta una granularità del tempo nella struct ts
+		ts.tv_sec
+		ts.tv_nsec
+	
+	nel caso dell'esempio visto imposta la granularità a nanosecondi 10^-9
+
+long int get_nanos():
+	
+	riempila la struttura timespec con secondi e nanosecondi a partire da una data dipendente dall'implementazione
+	
+	Pero' bisogna ancora definire il modo in cui contare il tempo
+	
+	la funzione ritorna i nanosecondi 
+	
+	(long) ts.tv_sec * (ts.tv_sec * 1000000000L + ts.tv_nsec)
+	
+
+long int get_day_nanos():
+	anche questa funzione ritorna i nanosecondi ma li complia
+	in una tabella organizzata in:
+	
+		anno-mese-giorno ora:minuti:secondi
+		
+UPDATE-TIME.CPP
+	void update_time():
+		aggiorna la var timeadvance che ci dice il tempo trascorso con la giusta granularità.
+
