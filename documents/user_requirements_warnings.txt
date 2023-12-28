@@ -1,0 +1,39 @@
+User Requirements
+1.	Dose iniettata in base a determinati valori di glucosio
+1.	Se il glucosio è sopra o sotto i valori attesi avviene il rilascio dell'insulina
+2.	Nessuna iniezione se il valore del glucosio rientra nel valore atteso
+2.	Limiti
+1.	Dose massima per singola iniezione
+2.	Sul numero di dosi giornaliere
+3.	Sull'insulina totale giornaliera
+3.	Al rilascio di una dose avviene un confronto con la dose precedente per tenere traccia dell'andamento dei valori dell'insulina
+4.	Dose di insulina minimizzata con monitoraggio costante sul valore di glucosio con lo scopo di iniettare meno insulina possibile ogni rilascio
+5.	Controllo sul numero totale di iniezioni giornaliere
+6.	Doppio controllo del glucosio, prima e dopo il rilascio dell'insulina per confrontare i risultati con i valori attesi
+1.	UNDERDOSE_FAILURE: se va sotto il valore atteso
+2.	OVERDOSE_FAILURE: se va sopra il valore atteso
+7.	Comprensione della variazione degli zuccheri nel sangue (aumento e decremento)
+1.	Bassi livelli di zucchero
+2.	Giusti livelli di zucchero
+3.	Alti livelli di zucchero
+8.	Intervallo di tempo con cui vengono effettuati test (ex. 10 minuti)
+9.	Doppio timer con tempo assoluto e tempo relativo e controllo del tempo giusto dopo ogni rilascio di insulina
+1.	EARLYTIME_FAILURE: se il rilascio avviene prima dell'intervallo prestabilito
+2.	LATETIME_FAILURE: se il rilascio avviene dopo l'intervallo prestabilito
+10.	Reset dei valori a mezzanotte
+FAULT Protection e Warning
+1.	SENSOR_FAILURE se uno dei sensori non dovesse funzionare avvisa l'utente con un warning
+2.	Manda un warning sul livello di insulina nel contenitore (100ml max)
+1.	LOW_INSULINE_WARNING Quando è quasi vuota (sotto un determinato valore)
+2.	EMPTY_INSULINE_WARNING Quando è vuota
+3.	LOW_BATTERY_WARNING: warning sul livello della batteria (quando è quasi scarica)
+4.	UNDERDOSE_FAILURE & OVERDOSE_FAILURE quando i risultati del doppio controllo non corrispondono ai valori attesi
+5.	EARLYTIME_FAILURE & LATETIME_FAILURE quando il rilascio di insulina avviene troppo a breve o troppo in ritardo rispetto al rilascio precedente. Il controllo viene effettuato dopo ogni rilascio confrontando un timer con tempo relativo (pari all'intervallo di tempo con cui viene rilasciata l'insulina) e un timer con tempo assoluto (orologio)
+Componenti
+1.	Sensore di glucosio
+2.	Pompa dell'insulina
+3.	Timer e orologio
+4.	Display
+5.	Riserva
+6.	Contatore di iniezioni
+
