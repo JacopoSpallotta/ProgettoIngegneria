@@ -8,10 +8,10 @@ BDIR=bin
 CC=g++
 # use this when connecting to Postgresql (library lpq)
 #CFLAGS=-std=c++11 -I. -I$(IDIR) -I/usr/include/postgresql -lpq -lm 
-#CFLAGS=-std=c++20 -g -ggdb -fpermissive -L/usr/local/lib -Wall -I. -I$(IDIR) -I/usr/include/postgresql -lpq -lm -lhiredis
+CFLAGS=-std=c++20 -g -ggdb -fpermissive -L/usr/local/lib -Wall -I. -I$(IDIR) -I/usr/include/postgresql -lpq -lm -lhiredis
 
 # use this when no connection to Postgresql (library lpq) is needed
-CFLAGS=-std=c++11 -I. -I$(IDIR) -lm
+#CFLAGS=-std=c++11 -I. -I$(IDIR) -lm 
 
 DEPS = $(wildcard $(IDIR)/*.h)
 #OBJ = $(wildcard $(ODIR)/*.o)
