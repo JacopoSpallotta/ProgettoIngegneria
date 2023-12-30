@@ -1,9 +1,9 @@
 
 
 #IDIR=../hdr
-IDIR=.
-ODIR=../obj
-BDIR=../bin
+IDIR=src
+ODIR=obj
+BDIR=bin
 
 CC=g++
 # use this when connecting to Postgresql (library lpq)
