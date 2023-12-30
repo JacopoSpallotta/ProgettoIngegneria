@@ -19,6 +19,16 @@ U: rate of glucose utilization by the tissues
 	
 ISR: beta-cells insulin secration rate 
 		(tasso di secrezione id cellule beta di insulina)
+	composto da tre componenti:
+		una base, una dinamica e una statoca
+		Phi_d: dynamic beta-cells responsivity 
+				(il rilascio di insulina pronta proporzionalmente 
+				al tasso di incremento della concentrazione del 
+				glucosio tramite il parametro Phi_d)
+		Phi_s: static beta-cells responsivity
+				(la fornitura di nuova insulina alla riserva di insulina
+				rilasciabile, la quale è proporzionale al ritardo
+				del segnale di glucosio definito dal parametro Phi_s)
 HE: hepatic insulin extraction
 		(estrazione eptica dell'insulina)
 		
