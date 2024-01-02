@@ -1,8 +1,0 @@
-//
-// Created by trast on 30/12/2023.
-//
-
-#ifndef PROGETTOINGEGNERIA_ENV_H
-#define PROGETTOINGEGNERIA_ENV_H
-
-#endif //PROGETTOINGEGNERIA_ENV_H
