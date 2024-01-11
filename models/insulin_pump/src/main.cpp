@@ -1,8 +1,4 @@
-
 #include "main.h"
-
-#define READ_STREAM "stream2"
-#define WRITE_STREAM "stream1"
 
 using namespace std;
 
@@ -42,8 +38,16 @@ int main() {
     /* Create streams/groups */
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
-        
+    
+    int t = 0;
+    Insulin_Pump pump = {MIN_GLUCOSE,AVERAGE_GLUCOSE,test,0.0,0};
+
     while (1){
+        insulin_pump_state next_state = next(pump, c2r, t);      
+
+        t++;
+        usleep(1000);
+
         // send
         send_counter++;
         sprintf(key, "mykey:%d", send_counter);
@@ -55,15 +59,7 @@ int main() {
         freeReplyObject(reply);
 
         
-        //  read
-        read_counter++;
-        printf("main(): pid %d: user %s: Trying to read msg %d from stream %s\n", pid, username, read_counter, READ_STREAM);
-
-        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter %s BLOCK %d COUNT 1 NOACK STREAMS %s >", username, block, READ_STREAM);
-
-        assertReply(c2r, reply);
-        dumpReply(reply, 0);
-        freeReplyObject(reply);
+        
 
         /* sleep   */
         //micro_sleep(1000000);
