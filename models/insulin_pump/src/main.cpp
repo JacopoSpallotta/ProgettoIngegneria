@@ -40,26 +40,13 @@ int main() {
     initStreams(c2r, WRITE_STREAM);
     
     int t = 0;
-    Insulin_Pump pump = {MIN_GLUCOSE,AVERAGE_GLUCOSE,test,0.0,0};
+    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0.0,0};
 
     while (1){
-        insulin_pump_state next_state = next(pump, c2r, t);      
-
+        insulin_pump_state next_state = next(pump, c2r, t);
+        
         t++;
         usleep(1000);
-
-        // send
-        send_counter++;
-        sprintf(key, "mykey:%d", send_counter);
-        sprintf(value, "myvalue:%d", send_counter);
-        
-        reply = RedisCommand(c2r, "XADD %s * %s %s", WRITE_STREAM, key, value);
-        assertReplyType(c2r, reply, REDIS_REPLY_STRING);
-        printf("main(): pid =%d: stream %s: Added %s -> %s (id: %s)\n", pid, WRITE_STREAM, key, value, reply->str);
-        freeReplyObject(reply);
-
-        
-        
 
         /* sleep   */
         //micro_sleep(1000000);

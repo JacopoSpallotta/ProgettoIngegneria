@@ -7,12 +7,15 @@
 #include <string>
 #include <unistd.h>
 #include <time.h>
+#include <math.h>
 #include "insulin_pump.h"
 
 #define READ_STREAM "stream2"
 #define WRITE_STREAM "stream1"
-#define MIN_GLUCOSE 50
-#define AVERAGE_GLUCOSE 100
+#define SAFE_MIN_GLUCOSE 80
+#define HARD_MIN_GLUCOSE 50
+#define SAFE_MAX_GLUCOSE 100
+#define HARD_MAX_GLUCOSE 120
 
 insulin_pump_state next(Insulin_Pump pump, redisContext* c2r, int curr_t);
 #endif

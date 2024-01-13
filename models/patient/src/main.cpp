@@ -42,8 +42,16 @@ int main() {
     /* Create streams/groups */
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
-        
+    
+    int t = 0;
+
+    double G, Gp, Vg;
+
+
+
     while (1){
+
+
         // send
         send_counter++;
         sprintf(key, "mykey:%d", send_counter);
