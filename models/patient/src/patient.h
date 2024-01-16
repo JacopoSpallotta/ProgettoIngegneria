@@ -47,5 +47,45 @@
 #define Heb	0.51 
 #define r1	0.7419
 #define r2	0.0807
+#define Fcns 1
+
+typedef struct glucose_kinetics_old{
+
+};
+
+typedef struct insulin_kinetics_old{
+    
+};
+
+typedef struct rate_glucose_app_old{
+    
+};
+
+typedef struct endog_glucose_prod_old {
+    double egp;
+    double x_l;
+    double i_f;
+};
+
+typedef struct glucose_utilization_old{
+    double u_ii;
+    double u_id;
+    double x;
+    double risk;
+    double f;
+};
+
+typedef struct renal_exrection_old{
+    double e;
+};
+
+typedef struct c_peptide_kinetics_old{
+    double cp_1;
+    double cp_2;
+};
+
+typedef struct insulin_cpeptide_old{
+    
+};
 
 using namespace std;

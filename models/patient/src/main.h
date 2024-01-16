@@ -8,4 +8,6 @@
 #include <time.h>
 #include <cmath>
 
+#define T 0.1
+
 #endif

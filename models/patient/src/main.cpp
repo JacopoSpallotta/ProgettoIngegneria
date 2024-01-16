@@ -74,7 +74,7 @@ int main() {
         freeReplyObject(reply);
 
         /* sleep   */
-        //micro_sleep(1000000);
+        //micro_sleep(10000);
     }  // while ()
     
     redisFree(c2r);

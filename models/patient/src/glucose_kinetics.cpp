@@ -7,6 +7,10 @@ double G(int t){
     return 0.0;
 }
 
+double G_t(int t){
+    return 0.0;
+}
+
 double G_p(int t){
     return 0.0;
 }
