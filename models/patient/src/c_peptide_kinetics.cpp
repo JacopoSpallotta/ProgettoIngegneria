@@ -3,10 +3,14 @@
 
 using namespace std;
 
-double cp_1(c_peptide_kinetics_old old, int t){
-    double curr_cp_1 = -(k_01+k_21) * old.cp_1 + k_12*cp_2(old, t);
+// A18
+double cp_1(insulin_cpeptide_old cpep_ins_old, cpeptide_kinetics_old cpep_kin_old){
+    double curr_cp_1 = cpep_kin_old.cp_1 + T * (-(k_01+k_21) * cpep_kin_old.cp_1 + k_12*cpep_kin_old.cp_2 + cpep_ins_old.isr/Vc);
+    return curr_cp_1;
 }
 
-double cp_2(c_peptide_kinetics_old old, int t){
-    return 0.0;
+// A18
+double cp_2(cpeptide_kinetics_old cpep_kin_old){
+    double curr_cp_2 = cpep_kin_old.cp_2 + T * (-k_12*cpep_kin_old.cp_2 + k_21*cpep_kin_old.cp_1);
+    return curr_cp_2;
 }

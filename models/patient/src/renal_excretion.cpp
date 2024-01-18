@@ -4,12 +4,12 @@
 
 using namespace std;
 
-double E(renal_exrection_old old, int t){
+// A17
+double E(glucose_kinetics_old kin_old, renal_exrection_old ren_old){
     double e_t = 0;
-    if (G_p(t) > ke2){
-        e_t = ke1 * (G_p(t) - ke2);
+    if (kin_old.G_p > ke2){
+        e_t = ke1 * (kin_old.G_p - ke2);
     }
-    double curr_e = old.e + T * e_t;
-    old.e = curr_e;
+    double curr_e = ren_old.e + T * e_t;
     return curr_e;
 }

@@ -20,7 +20,7 @@
 #define k2	0.043 
 #define k1	0.066 
 #define p2U	0.058 
-#define alpha 0.034 
+#define alpha_a20 0.034 
 #define PHId 286 
 #define PHIs 20.3 
 #define Vi	0.041 
@@ -37,10 +37,10 @@
 #define k_01 0.06
 #define k_21 0.064 
 #define k_12 0.048 
-#define Sex	0
-#define Age	54.9
-#define Height 168
-#define Weight 96
+#define SEX	0 
+#define AGE	54.9
+#define HEIGHT 168
+#define WEIGHT 96
 #define BMI	33.77
 #define BSA	2.03 
 #define h	98.7
@@ -48,17 +48,31 @@
 #define r1	0.7419
 #define r2	0.0807
 #define Fcns 1
+#define Cpb 200
+#define DOSE 105
+#define F 0.9
 
 typedef struct glucose_kinetics_old{
-
+    double G_p;
+    double G_t;
+    double G;
 };
 
 typedef struct insulin_kinetics_old{
-    
+    double I_l;
+    double I_p;
+    double I_ev;
+    double I;
+    double m3;
+    double HE;
 };
 
 typedef struct rate_glucose_app_old{
-    
+    double q_sto;
+    double q_sto_1;
+    double q_sto_2;
+    double q_gut;
+    double ra_meal;
 };
 
 typedef struct endog_glucose_prod_old {
@@ -71,21 +85,22 @@ typedef struct glucose_utilization_old{
     double u_ii;
     double u_id;
     double x;
-    double risk;
-    double f;
 };
 
 typedef struct renal_exrection_old{
     double e;
 };
 
-typedef struct c_peptide_kinetics_old{
+typedef struct cpeptide_kinetics_old{
     double cp_1;
     double cp_2;
 };
 
 typedef struct insulin_cpeptide_old{
-    
+    double isr;
+    double isr_s;
+    double isr_d;
+    double isr_b;
 };
 
 using namespace std;

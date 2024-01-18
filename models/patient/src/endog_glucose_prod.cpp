@@ -5,8 +5,8 @@
 
 using namespace std;
 
-
-double EGP(endog_glucose_prod_old old, int t){
+// A9
+double EGP(insulin_kinetics_old ins_old, glucose_kinetics_old old_gluc, endog_glucose_prod_old old_end){
     double Gpb = Gb*Vg;
     double Ipb = Ib*Vi;
     double m30 = (Heb*m1) / (double) (1-Heb);
@@ -15,19 +15,18 @@ double EGP(endog_glucose_prod_old old, int t){
 
     double kp1 = EGPb+kp2*Gpb+kp3*Ib+kp4*Ilb;
 
-    double curr_egp = old.egp + T * (kp1- kp2*G_p(t) - kp3*X_L(old, t) - kp4*I_l(t)); // TODO: verificare t=0 cosa fare (?)
-    old.egp = curr_egp;
+    double curr_egp = old_end.egp + T * (kp1- kp2*old_gluc.G_p - kp3*old_end.x_l - kp4*ins_old.I_l); // TODO: verificare t=0 cosa fare (?)
     return curr_egp;
 }
 
-double X_L(endog_glucose_prod_old old, int t){
-    double x_curr = old.x_l + T * (-ki * (old.x_l - I_f(old, t)));
-    old.x_l = x_curr;
+// A10
+double X_L(endog_glucose_prod_old old){
+    double x_curr = old.x_l + T * (-ki * (old.x_l - old.i_f));
     return x_curr;
 }
 
-double I_f (endog_glucose_prod_old old, int t){
-    double i_curr = -ki * (old.i_f - I(t));
-    old.i_f = i_curr;
+// A11
+double I_f (insulin_kinetics_old ins_old, endog_glucose_prod_old end_old){
+    double i_curr = end_old.i_f + T * (-ki * (end_old.i_f - ins_old.I));
     return i_curr;
 }
