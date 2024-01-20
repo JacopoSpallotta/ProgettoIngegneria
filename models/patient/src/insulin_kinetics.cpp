@@ -1,5 +1,9 @@
+#ifndef insulin_kinetics
+#define insulin_kinetics
+
 #include "main.h"
-#include "patient.h"
+
+#endif
 
 using namespace std;
 

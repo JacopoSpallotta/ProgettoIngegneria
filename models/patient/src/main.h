@@ -7,8 +7,15 @@
 #include <unistd.h>
 #include <time.h>
 #include <cmath>
-
-#define T 0.1
-
+#include "patient.h"
+#include "c_peptide_kinetics.cpp"
+#include "endog_glucose_prod.cpp"
+#include "glucose_kinetics.cpp"
+#include "insulin_cpeptide.cpp"
+#include "insulin_kinetics.cpp"
+#include "rate_glucose_app.cpp"
+#include "renal_excretion.cpp"
+#include "glucose_utilization.cpp"
+#include <string>
 
 #endif

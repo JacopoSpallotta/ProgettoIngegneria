@@ -1,4 +1,3 @@
-
 #include "main.h"
 
 #define READ_STREAM "stream1"
@@ -6,7 +5,7 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
     redisContext *c2r;
     redisReply *reply;
     int read_counter = 0;
@@ -18,7 +17,69 @@ int main() {
     char key[100];
     char value[100];
 
+    // Initialize patient characteristics
+    bool sex = atoi(argv[0]);
+    int age = atoi(argv[1]);
+    double weight = stod(argv[2]);
+    double height = stod(argv[3]);
+    double bmi = weight/(pow(height/100,2));
+    double b1 = log(2) / (0.14*age+29.16);
+    double a1;
+    double fra;
+    if(bmi){
+        a1 = 0.14;
+        fra = 0.76;
+    }else{
+        a1 = 0.152;
+        fra = 0.78;
+    }
+    double bsa = 0.007194*(pow(height,0.725)*pow(weight,0.425));
+    double Vc;
+    if (sex == 1){
+        Vc = 1.92*bsa+0.64;
+    }else{
+        Vc = 1.11*bsa+2.04;
+    }
+    Patient patient = {sex,age,weight,height,bmi,bsa,b1,a1,fra,Vc};
+
+    // Initialize structs for old functions values
+    double Gpb = Gb*Vg;
+    double Gtb;
+    double Vm0;
+    if(Gpb <= ke2){
+        Gtb = (Fcns-EGPb+k1*Gpb)/k2;
+        Vm0 = (EGPb - Fcns)*(km0+Gtb)/Gtb;
+    }else{
+        Gtb = ( (Fcns-EGPb+ke1*(Gpb-ke2))/Vg+k1*Gpb)/k2;
+        Vm0 = (EGPb-Fcns-ke1*(Gpb-ke2))*(km0+Gtb)/Gtb;
+    }
+    glucose_kinetics_old gluc_kin = {Gpb,Gtb,Gb};
+
+    double Ipb= Ib*Vi;
+    double HEb = max((SRb-m4*Ipb)/(SRb+m2*Ipb), 0.0);
+    double m3_0 = (HEb*m1)/(1-HEb);
+    double Ilb = (Ipb*m2+SRb)/(m1+m3_0);
+    double Ievb = Ipb*m5/m6;
+    insulin_kinetics_old ins_kin = {Ilb,Ipb,Ievb,Ib,m3_0,HEb};
+
+    rate_glucose_app_old rate_gluc = {0,0,0,0,0};
+
+    double kp1 = EGPb+kp2*Gpb+kp3*Ib+kp4*Ilb;
+    endog_glucose_prod_old end_gluc = {EGPb, Ib, Ib};
+
+    double U_id_b = (Vm0 * Gtb) / (km0 + Gtb);
+    glucose_utilization_old gluc_util = {U_id_b,0};
     
+    renal_exrection_old ren_excr = {0};
+
+    double k12 = fra*b1+(1-fra)*a1;
+    double k01 = (a1*b1)/k12;
+    double k21 = a1+b1-k12-k01;
+    double cp2b = Cpb*k21/k12;
+    cpeptide_kinetics_old cpep_kin = {Cpb,cp2b};
+
+    double isr_b = Cpb/weight*Vc*k01;
+    insulin_cpeptide_old ins_cpep = {isr_b,0,0}; 
     /*  prg  */
 
     #if (DEBUG > 0)
@@ -43,13 +104,11 @@ int main() {
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
     
-    int t = 0;
-
-    double G, Gp, Vg;
-
-
+    int t = 1;
 
     while (1){
+
+
 
 
         // send
@@ -79,3 +138,5 @@ int main() {
     
     redisFree(c2r);
 }
+
+

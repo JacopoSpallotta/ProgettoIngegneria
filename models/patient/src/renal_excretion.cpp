@@ -1,6 +1,9 @@
+#ifndef renal_excretion
+#define renal_excretion
+
 #include "main.h"
-#include "patient.h"
-#include "glucose_kinetics.cpp"
+
+#endif
 
 using namespace std;
 

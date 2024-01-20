@@ -1,29 +1,25 @@
-#include "main.h"
-#include "patient.h"
-#include "insulin_kinetics.cpp"
-#include "glucose_kinetics.cpp"
+#ifndef glucose_utilization
+#define glucose_utilization
 
+#include "main.h"
+
+#endif
 using namespace std;
 
 // A12
-double U_ii(glucose_utilization_old old){
+double U_ii(){
     return Fcns;
-}
-
-// A13
-double U_id(glucose_kinetics_old kin_old, glucose_utilization_old util_old){
-    double Gpb = Gb*Vg;
-    double Gtb = (Fcns - EGPb + k1*Gpb) / (double) k2;
-    double Vm0 = (EGPb-Fcns)*(km0+Gtb)/ Gtb;
-
-    double curr_u_id = util_old.u_id + T * ( ( ( Vm0 + Vmx * util_old.x * (1+r1*risk(kin_old.G)) ) * kin_old.G_t ) / (km0 + kin_old.G_t) );
-    return curr_u_id;
 }
 
 // A14
 double X(insulin_kinetics_old ins_old, glucose_utilization_old util_old){
     double curr_x = util_old.x + T * (-p2U * util_old.x + p2U * (ins_old.I - Ib));
     return curr_x;
+}
+
+// A16
+double f(double G){
+    return pow(log(G),r2) - pow(log(Gb), r2);
 }
 
 // A15
@@ -37,8 +33,9 @@ double risk(double G){
     }
 }
 
-// A16
-double f(double G){
-    return pow(log(G),r2) - pow(log(Gb), r2);
+// A13
+double U_id(double Gpb, double Gtb, double Vm0, glucose_kinetics_old kin_old, glucose_utilization_old util_old){
+    double curr_u_id = util_old.u_id + T * ( ( ( Vm0 + Vmx * util_old.x * (1+r1*risk(kin_old.G)) ) * kin_old.G_t ) / (km0 + kin_old.G_t) );
+    return curr_u_id;
 }
 

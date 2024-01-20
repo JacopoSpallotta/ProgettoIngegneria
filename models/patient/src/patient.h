@@ -1,5 +1,5 @@
-#include "main.h"
-// kp1 = EGPb+kp2Gpb+kp3Ib+kp4*Ilb
+#ifndef patient_h
+#define pateint_h
 
 #define EGPb 1.59
 #define kp2 0.0008
@@ -33,24 +33,30 @@
 #define Gb	127 
 #define G_th 50
 #define SRb	737.5 
-#define Vc	4.34 
-#define k_01 0.06
-#define k_21 0.064 
-#define k_12 0.048 
-#define SEX	0 
-#define AGE	54.9
-#define HEIGHT 168
-#define WEIGHT 96
-#define BMI	33.77
-#define BSA	2.03 
 #define h	98.7
 #define Heb	0.51 
 #define r1	0.7419
 #define r2	0.0807
 #define Fcns 1
 #define Cpb 200
-#define DOSE 105
 #define F 0.9
+
+#define T 0.1
+
+#endif
+
+typedef struct Patient{
+    bool sex;
+    int age;
+    double weight;
+    double height;
+    double bmi;
+    double bsa;
+    double b1;
+    double a1;
+    double fra;
+    double vc;
+};
 
 typedef struct glucose_kinetics_old{
     double G_p;
@@ -82,7 +88,6 @@ typedef struct endog_glucose_prod_old {
 };
 
 typedef struct glucose_utilization_old{
-    double u_ii;
     double u_id;
     double x;
 };
@@ -100,7 +105,6 @@ typedef struct insulin_cpeptide_old{
     double isr;
     double isr_s;
     double isr_d;
-    double isr_b;
 };
 
 using namespace std;
