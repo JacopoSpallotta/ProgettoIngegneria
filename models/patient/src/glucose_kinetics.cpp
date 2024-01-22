@@ -1,11 +1,4 @@
-#ifndef glucose_kinetics
-#define glucose_kinetics
-
-#include "main.h"
-
-#endif
-
-using namespace std;
+#include "glucose_kinetics.h"
 
 double G(glucose_kinetics_old g_old){
     double curr_g = g_old.G + T * (g_old.G_p / Vg);

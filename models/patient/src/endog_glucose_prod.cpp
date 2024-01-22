@@ -1,11 +1,4 @@
-#ifndef endog_glucose_prod
-#define endog_glucose_prod
-
-#include "main.h"
-
-#endif
-
-using namespace std;
+#include "endog_glucose_prod.h"
 
 // A9
 double EGP(double kp1, insulin_kinetics_old ins_old, glucose_kinetics_old old_gluc, endog_glucose_prod_old old_end){

@@ -1,11 +1,4 @@
-#ifndef insulin_kinetics
-#define insulin_kinetics
-
-#include "main.h"
-
-#endif
-
-using namespace std;
+#include "insulin_kinetics.h"
 
 // A2
 double I(insulin_kinetics_old ins_old, double u){

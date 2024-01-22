@@ -1,10 +1,4 @@
-#ifndef glucose_utilization
-#define glucose_utilization
-
-#include "main.h"
-
-#endif
-using namespace std;
+#include "glucose_utilization.h"
 
 // A12
 double U_ii(){

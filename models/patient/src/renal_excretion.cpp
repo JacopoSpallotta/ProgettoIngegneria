@@ -1,11 +1,4 @@
-#ifndef renal_excretion
-#define renal_excretion
-
-#include "main.h"
-
-#endif
-
-using namespace std;
+#include "renal_excretion.h"
 
 // A17
 double E(glucose_kinetics_old kin_old, renal_exrection_old ren_old){
@@ -16,3 +9,4 @@ double E(glucose_kinetics_old kin_old, renal_exrection_old ren_old){
     double curr_e = ren_old.e + T * e_t;
     return curr_e;
 }
+

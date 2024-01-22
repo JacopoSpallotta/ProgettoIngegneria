@@ -1,10 +1,4 @@
-#ifndef insulin_cpeptide
-#define insulin_cpeptide
-
-#include "main.h"
-
-#endif
-using namespace std;
+#include "insulin_cpeptide.h"
 
 // A19
 double ISR(double isr_b, insulin_cpeptide_old cpep_ins_old){

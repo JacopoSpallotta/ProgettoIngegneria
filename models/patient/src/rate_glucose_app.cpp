@@ -1,11 +1,4 @@
-#ifndef rate_glucose_app
-#define rate_glucose_app
-
-#include "main.h"
-
-#endif
-
-using namespace std;
+#include "rate_glucose_app.h"
 
 // A7
 double Alpha (double dose){
@@ -55,3 +48,4 @@ double Ra_meal (rate_glucose_app_old g_app_old, double bw) {
     double ra_meal = g_app_old.ra_meal + T * ((F*kabs*g_app_old.q_gut)/bw);
     return ra_meal;
 }
+
