@@ -26,25 +26,25 @@ double Q_sto(rate_glucose_app_old g_app_old) {
 
 // A5
 
-double Q_sto_1(rate_glucose_app_old g_app_old, double dose, int delta) {
+double Q_sto_1(double dose, int delta, rate_glucose_app_old g_app_old) {
     double curr_q_sto_1 = g_app_old.q_sto_1 + T * ((-kmax * g_app_old.q_sto_1) + dose * delta);
     return curr_q_sto_1;
 }
 
 // A5
-double Q_sto_2(rate_glucose_app_old g_app_old, double dose) {
+double Q_sto_2(double dose, rate_glucose_app_old g_app_old) {
     double curr_q_sto_2 = g_app_old.q_sto_2 + T * ( (-K_empt(g_app_old.q_sto, dose) * g_app_old.q_sto_2)+(kmax * g_app_old.q_sto_1));
     return curr_q_sto_2;
 }
 
 // A5
-double Q_gut(rate_glucose_app_old g_app_old, double dose) {
+double Q_gut(double dose, rate_glucose_app_old g_app_old) {
     double curr_q_gut = g_app_old.q_gut + T * ((-kabs * g_app_old.q_gut) + K_empt(g_app_old.q_sto, dose)*g_app_old.q_sto_2);
     return curr_q_gut;
 }
 
 // A5
-double Ra_meal (rate_glucose_app_old g_app_old, double bw) {
+double Ra_meal (double bw, rate_glucose_app_old g_app_old) {
     double ra_meal = g_app_old.ra_meal + T * ((F*kabs*g_app_old.q_gut)/bw);
     return ra_meal;
 }
