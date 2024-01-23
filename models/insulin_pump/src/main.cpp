@@ -2,6 +2,8 @@
 
 using namespace std;
 
+
+
 int main() {
     redisContext *c2r;
     redisReply *reply;
@@ -34,6 +36,15 @@ int main() {
     c2r = redisConnect("localhost", 6379);
 
     printf("main(): pid %d: user %s: connected to redis\n", pid, username);
+
+    // Delete streams if exists
+    reply = RedisCommand(c2r, "DEL %s", READ_STREAM);
+    assertReply(c2r, reply);
+    dumpReply(reply, 0);
+
+    reply = RedisCommand(c2r, "DEL %s", WRITE_STREAM);
+    assertReply(c2r, reply);
+    dumpReply(reply, 0);
 
     /* Create streams/groups */
     initStreams(c2r, READ_STREAM);
