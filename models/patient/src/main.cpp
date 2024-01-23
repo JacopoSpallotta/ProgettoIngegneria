@@ -123,6 +123,13 @@ int main(int argc, char *argv[]) {
         double isr_s_new = ISR_s(Vc, gluc_kin, ins_cpep);
         double isr_d_new = ISR_d(Vc, gluc_kin);
 
+        double I_new = I(double u, ins_kin);
+        double I_ev_new = I_ev(ins_kin);
+        double I_p_new = I_p(double u, ins_kin);
+        double I_l_new = I_l(weight, ins_kin, ins_cpep);
+        double m3_new = m3(ins_kin);
+        double HE_new = HE(ins_kin, gluc_kin);
+
         double G_p_new = G_p(gluc_kin,end_gluc,rate_gluc,gluc_util,ren_excr);
         double G_t_new = G_t(gluc_kin,gluc_util);
         double G_new = G(gluc_kin);
