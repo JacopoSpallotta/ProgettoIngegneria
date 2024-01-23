@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
         double G_t_new = G_t(gluc_kin,gluc_util);
         double G_new = G(gluc_kin);
 
-        auto Qsto1_new = Q_sto_1(105.0, rand()%2 ,rate_gluc);
+        auto Qsto1_new = Q_sto_1(105, rand()%2 ,rate_gluc);
         auto Qsto2_new = Q_sto_2(rand()%2, rate_gluc);
         auto Qsto_new = Q_sto(rate_gluc);
         auto Qgut_new = Q_gut(rand()%2, rate_gluc);
