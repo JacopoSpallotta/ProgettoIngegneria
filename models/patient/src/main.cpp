@@ -6,6 +6,10 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+    #if (1 > 0)
+    setvbuf(stdout, (char*) NULL, _IONBF, 0);
+    setvbuf(stderr, (char*) NULL, _IONBF, 0);
+    #endif
     redisContext *c2r;
     redisReply *reply;
     int read_counter = 0;
@@ -18,6 +22,10 @@ int main(int argc, char *argv[]) {
     char value[100];
 
     // Initialize patient characteristics
+    if(argc != 5){
+        fprintf(stderr, "Five arguments nedeed");
+        return -1;
+    }
     bool sex = atoi(argv[0]);
     int age = atoi(argv[1]);
     double weight = stod(argv[2]);
@@ -40,6 +48,7 @@ int main(int argc, char *argv[]) {
     }else{
         Vc = 1.11*bsa+2.04;
     }
+
     Patient patient = {sex,age,weight,height,bmi,bsa,b1,a1,fra,Vc};
 
     // Initialize structs for old functions values
@@ -85,10 +94,7 @@ int main(int argc, char *argv[]) {
     double u;
     /*  prg  */
 
-    #if (DEBUG > 0)
-    setvbuf(stdout, (char*) NULL, _IONBF, 0);
-    setvbuf(stderr, (char*) NULL, _IONBF, 0);
-    #endif
+
 
     seed = (unsigned) time(NULL);
     srand(seed);
@@ -174,7 +180,7 @@ int main(int argc, char *argv[]) {
         cpep_kin = {cp_1_new,cp_2_new};
         ins_cpep = {isr_new, isr_s_new, isr_d_new};
 
-
+        t++;
         usleep(10000);
     }  // while ()
     
