@@ -80,6 +80,9 @@ int main(int argc, char *argv[]) {
 
     double isr_b = Cpb/weight*Vc*k01;
     insulin_cpeptide_old ins_cpep = {isr_b,0,0}; 
+
+    // where the output of the insulin pump will be stored
+    double u;
     /*  prg  */
 
     #if (DEBUG > 0)
@@ -104,7 +107,7 @@ int main(int argc, char *argv[]) {
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
     
-    int t = 1;
+    int t = 0;
 
     while (1){
         double egp_new = EGP(kp1, ins_kin, gluc_kin, end_gluc);
@@ -114,7 +117,7 @@ int main(int argc, char *argv[]) {
         double x_new = X(ins_kin, gluc_util);
         double u_id_new = U_id(Gpb,Gtb,Vm0,gluc_kin,gluc_util);
 
-        double ren_excr_new = E(gluc_kin, ren_excr);
+        double e_new = E(gluc_kin, ren_excr);
 
         double cp_1_new = cp_1(k01,k12,k21,Vc, ins_cpep, cpep_kin);
         double cp_2_new = cp_2(k12,k21,cpep_kin);
@@ -123,9 +126,9 @@ int main(int argc, char *argv[]) {
         double isr_s_new = ISR_s(Vc, gluc_kin, ins_cpep);
         double isr_d_new = ISR_d(Vc, gluc_kin);
 
-        double I_new = I(double u, ins_kin);
+        double I_new = I(u, ins_kin);
         double I_ev_new = I_ev(ins_kin);
-        double I_p_new = I_p(double u, ins_kin);
+        double I_p_new = I_p(u, ins_kin);
         double I_l_new = I_l(weight, ins_kin, ins_cpep);
         double m3_new = m3(ins_kin);
         double HE_new = HE(ins_kin, gluc_kin);
@@ -134,36 +137,45 @@ int main(int argc, char *argv[]) {
         double G_t_new = G_t(gluc_kin,gluc_util);
         double G_new = G(gluc_kin);
 
-        auto Qsto1_new = Q_sto_1(105, rand()%2 ,rate_gluc);
-        auto Qsto2_new = Q_sto_2(rand()%2, rate_gluc);
-        auto Qsto_new = Q_sto(rate_gluc);
-        auto Qgut_new = Q_gut(rand()%2, rate_gluc);
-        auto Ra_Meal_new = (weight, rate_gluc);
+        double Qsto1_new = Q_sto_1(105, rand()%2 ,rate_gluc);
+        double Qsto2_new = Q_sto_2(rand()%2, rate_gluc);
+        double Qsto_new = Q_sto(rate_gluc);
+        double Qgut_new = Q_gut(rand()%2, rate_gluc);
+        double Ra_meal_new = Ra_meal(weight, rate_gluc);
 
+        if ((t % 5) == 0){
+            // send
+            reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "glucose", G_new);
+            assertReplyType(c2r, reply, REDIS_REPLY_STRING);
+            printf("main(): pid =%d: stream %s: Added %s -> %f (id: %s)\n", getpid(), WRITE_STREAM, "glucose", G_new, reply->str);
+            freeReplyObject(reply);
+        }
+        if( (t % 5) == 1){
+            printf("main(): pid %d: user %s: Trying to read msg %d from stream %s\n", pid, username, read_counter, READ_STREAM);
 
-        // send
-        send_counter++;
-        sprintf(key, "mykey:%d", send_counter);
-        sprintf(value, "myvalue:%d", send_counter);
+            reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", username, block, READ_STREAM);
+            double doseReceived = stod(reply->str);
+            if (doseReceived > 0){
+                u = doseReceived;
+            }else{
+                u = 0;
+            }
+            assertReply(c2r, reply);
+            dumpReply(reply, 0);
+            freeReplyObject(reply);
+        }
         
-        reply = RedisCommand(c2r, "XADD %s * %s %s", WRITE_STREAM, key, value);
-        assertReplyType(c2r, reply, REDIS_REPLY_STRING);
-        printf("main(): pid =%d: stream %s: Added %s -> %s (id: %s)\n", pid, WRITE_STREAM, key, value, reply->str);
-        freeReplyObject(reply);
+        gluc_kin = {G_p_new,G_t_new,G_new};
+        ins_kin = {I_l_new,I_p_new,I_ev_new,I_new,m3_new, HE_new};
+        rate_gluc = {Qsto_new, Qsto1_new, Qsto2_new, Qgut_new, Ra_meal_new};
+        end_gluc = {egp_new,x_l_new,I_f_new};
+        gluc_util = {u_id_new, x_new};
+        ren_excr = {e_new};
+        cpep_kin = {cp_1_new,cp_2_new};
+        ins_cpep = {isr_new, isr_s_new, isr_d_new};
 
-        
-        //  read
-        read_counter++;
-        printf("main(): pid %d: user %s: Trying to read msg %d from stream %s\n", pid, username, read_counter, READ_STREAM);
 
-        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter %s BLOCK %d COUNT 1 NOACK STREAMS %s >", username, block, READ_STREAM);
-
-        assertReply(c2r, reply);
-        dumpReply(reply, 0);
-        freeReplyObject(reply);
-
-        /* sleep   */
-        //micro_sleep(10000);
+        usleep(10000);
     }  // while ()
     
     redisFree(c2r);

@@ -11,6 +11,8 @@ insulin_pump_state next(Insulin_Pump pump, redisContext *c2r, int curr_t){
 
         assertReply(c2r, reply);
         double glucose_level = stod(reply->str);
+        dumpReply(reply, 0);
+
 
         double curr_delta = glucose_level - pump.prev_glucose;
         double old_delta = pump.prev_glucose - pump.prev_prev_glucose;

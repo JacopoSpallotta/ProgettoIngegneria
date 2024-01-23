@@ -46,7 +46,7 @@ int main() {
         insulin_pump_state next_state = next(pump, c2r, t);
         
         t++;
-        usleep(1000);
+        usleep(10000);
 
         /* sleep   */
         //micro_sleep(1000000);
