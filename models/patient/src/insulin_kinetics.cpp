@@ -2,7 +2,7 @@
 
 // A2
 double I(insulin_kinetics_old ins_old, double u){
-    double curr_i = ins_old.I + T * ( (ins_old.I_p + u)/Vi );
+    double curr_i = (ins_old.I_p + u)/Vi;
     return curr_i;
 }
 
@@ -26,13 +26,13 @@ double I_l(insulin_kinetics_old ins_old, insulin_cpeptide_old cpep_ins_old, doub
 
 // A3
 double m3(insulin_kinetics_old ins_old){
-    double curr_m3 = ins_old.m3 + T * ( (ins_old.HE*m1)/(1-ins_old.HE) );
+    double curr_m3 = (ins_old.HE*m1)/(1-ins_old.HE);
     return curr_m3;
 }
 
 // A4
 double HE(insulin_kinetics_old ins_old, glucose_kinetics_old gluc_old){
     double a0G = Heb+aG*Gb;
-    double curr_he = ins_old.HE + T * ( -aG * gluc_old.G + a0G );
+    double curr_he = -aG * gluc_old.G + a0G;
     return curr_he;
 }

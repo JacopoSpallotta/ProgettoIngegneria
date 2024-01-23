@@ -29,7 +29,7 @@ double risk(double G){
 
 // A13
 double U_id(double Gpb, double Gtb, double Vm0, glucose_kinetics_old kin_old, glucose_utilization_old util_old){
-    double curr_u_id = util_old.u_id + T * ( ( ( Vm0 + Vmx * util_old.x * (1+r1*risk(kin_old.G)) ) * kin_old.G_t ) / (km0 + kin_old.G_t) );
+    double curr_u_id = ( ( Vm0 + Vmx * util_old.x * (1+r1*risk(kin_old.G)) ) * kin_old.G_t ) / (km0 + kin_old.G_t);
     return curr_u_id;
 }
 

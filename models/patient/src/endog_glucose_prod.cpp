@@ -2,7 +2,7 @@
 
 // A9
 double EGP(double kp1, insulin_kinetics_old ins_old, glucose_kinetics_old old_gluc, endog_glucose_prod_old old_end){
-    double curr_egp = old_end.egp + T * (kp1- kp2*old_gluc.G_p - kp3*old_end.x_l - kp4*ins_old.I_l);
+    double curr_egp = (kp1- kp2*old_gluc.G_p - kp3*old_end.x_l - kp4*ins_old.I_l);
     return curr_egp;
 }
 

@@ -107,8 +107,25 @@ int main(int argc, char *argv[]) {
     int t = 1;
 
     while (1){
+        double egp_new = EGP(kp1, ins_kin, gluc_kin, end_gluc);
+        double x_l_new = X_L(end_gluc);
+        double I_f_new = I_f(ins_kin, end_gluc);
 
+        double x_new = X(ins_kin, gluc_util);
+        double u_id_new = U_id(Gpb,Gtb,Vm0,gluc_kin,gluc_util);
 
+        double ren_excr_new = E(gluc_kin, ren_excr);
+
+        double cp_1_new = cp_1(k01,k12,k21,Vc, ins_cpep, cpep_kin);
+        double cp_2_new = cp_2(k12,k21,cpep_kin);
+
+        double isr_new = ISR(isr_b, ins_cpep);
+        double isr_s_new = ISR_s(Vc, gluc_kin, ins_cpep);
+        double isr_d_new = ISR_d(Vc, gluc_kin);
+
+        double G_p_new = G_p(gluc_kin,end_gluc,rate_gluc,gluc_util,ren_excr);
+        double G_t_new = G_t(gluc_kin,gluc_util);
+        double G_new = G(gluc_kin);
 
 
         // send

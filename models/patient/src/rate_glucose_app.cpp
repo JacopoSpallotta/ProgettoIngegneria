@@ -45,7 +45,7 @@ double Q_gut(rate_glucose_app_old g_app_old, double dose) {
 
 // A5
 double Ra_meal (rate_glucose_app_old g_app_old, double bw) {
-    double ra_meal = g_app_old.ra_meal + T * ((F*kabs*g_app_old.q_gut)/bw);
+    double ra_meal = (F*kabs*g_app_old.q_gut)/bw;
     return ra_meal;
 }
 

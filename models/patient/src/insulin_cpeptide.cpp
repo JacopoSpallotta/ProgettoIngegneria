@@ -2,7 +2,7 @@
 
 // A19
 double ISR(double isr_b, insulin_cpeptide_old cpep_ins_old){
-    double curr_isr = cpep_ins_old.isr + T * ( cpep_ins_old.isr_s + cpep_ins_old.isr_d + isr_b);
+    double curr_isr = cpep_ins_old.isr_s + cpep_ins_old.isr_d + isr_b;
     return curr_isr;
 }
 
