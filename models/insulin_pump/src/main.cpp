@@ -3,19 +3,12 @@
 using namespace std;
 
 
-
 int main() {
     redisContext *c2r;
     redisReply *reply;
     int read_counter = 0;
-    int send_counter = 0;
-    long block = 100000000000;
-    int pid;
+    int pid = getpid();
     unsigned seed;
-    char username[100];
-    char key[100];
-    char value[100];
-
     
     /*  prg  */
 
@@ -27,15 +20,13 @@ int main() {
     seed = (unsigned) time(NULL);
     srand(seed);
 
-    sprintf(username, "%u", rand());
-
     pid = getpid();
 
-    printf("main(): pid %d: user %s: connecting to redis ...\n", pid, username);
+    printf("main(): pid %d: user insulin_pump: connecting to redis ...\n", pid);
 
     c2r = redisConnect("localhost", 6379);
 
-    printf("main(): pid %d: user %s: connected to redis\n", pid, username);
+    printf("main(): pid %d: user insulin_pump: connected to redis\n", pid);
 
     // Delete streams if exists
     reply = RedisCommand(c2r, "DEL %s", READ_STREAM);
@@ -54,7 +45,8 @@ int main() {
     Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0.0,0};
 
     while (1){
-        insulin_pump_state next_state = next(pump, c2r, t);
+        insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
+        pump.state = next_state;
         
         t++;
         usleep(10000);

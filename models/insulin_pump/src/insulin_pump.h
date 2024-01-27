@@ -8,7 +8,8 @@ typedef struct Insulin_Pump{
     const int SAFE_MAX_GLUCOSE;
     
     insulin_pump_state state;
+    double comp_dose;
     double prev_glucose;
     double prev_prev_glucose;
     int t_old;
-};
+}Insulin_Pump;

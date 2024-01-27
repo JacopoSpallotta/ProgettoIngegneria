@@ -14,24 +14,20 @@ int main(int argc, char *argv[]) {
     redisContext *c2r;
     redisReply *reply;
     int read_counter = 0;
-    int send_counter = 0;
-    long block = 100000000000;
-    int pid;
     unsigned seed;
-    char username[100];
-    char key[100];
-    char value[100];
+    int pid = getpid();
 
     // Initialize patient characteristics
     if(argc != 5){
-        fprintf(stderr, "Five arguments nedeed");
+        fprintf(stderr, "Four arguments nedeed\n");
         return -1;
     }
-    bool sex = atoi(argv[0]);
-    int age = atoi(argv[1]);
-    double weight = stod(argv[2]);
-    double height = stod(argv[3]);
-    double bmi = weight/(pow(height/100,2));
+    bool sex = atoi(argv[1]);
+    int age = atoi(argv[2]);
+    double weight = stod(argv[3]);
+    double height = stod(argv[4]);
+    cout<<sex<<" "<<age<<" "<<weight<<" "<<height<<endl;
+    double bmi = weight/(pow(height/100, 2));
     double b1 = log(2) / (0.14*age+29.16);
     double a1;
     double fra;
@@ -93,24 +89,19 @@ int main(int argc, char *argv[]) {
 
     // where the output of the insulin pump will be stored
     double u;
+
     /*  prg  */
-
-
 
     seed = (unsigned) time(NULL);
     srand(seed);
-
-    sprintf(username, "%u", rand());
-
-    pid = getpid();
-
-    printf("main(): pid %d: user %s: connecting to redis ...\n", pid, username);
+    
+    printf("main(): pid %d: user patient: connecting to redis ...\n", pid);
 
     c2r = redisConnect("localhost", 6379);
 
-    printf("main(): pid %d: user %s: connected to redis\n", pid, username);
+    printf("main(): pid %d: user patient: connected to redis\n", pid);
 
-    // Delete streams if exists
+     // Delete streams if exists
     reply = RedisCommand(c2r, "DEL %s", READ_STREAM);
     assertReply(c2r, reply);
     dumpReply(reply, 0);
@@ -126,6 +117,11 @@ int main(int argc, char *argv[]) {
     int t = 0;
 
     while (1){
+        int delta = 0;
+        if( (t%(0+60+240) >= 0) && (t % (0+60+240) < 60)){
+            cout<<t%(60+240)<<": "<<"##################################################"<<endl;
+            delta = 1;
+        }
         double egp_new = EGP(kp1, ins_kin, gluc_kin, end_gluc);
         double x_l_new = X_L(end_gluc);
         double I_f_new = I_f(ins_kin, end_gluc);
@@ -153,31 +149,33 @@ int main(int argc, char *argv[]) {
         double G_t_new = G_t(gluc_kin,gluc_util);
         double G_new = G(gluc_kin);
 
-        double Qsto1_new = Q_sto_1(105, rand()%2 ,rate_gluc);
-        double Qsto2_new = Q_sto_2(rand()%2, rate_gluc);
+        double Qsto1_new = Q_sto_1(120, delta,rate_gluc);
+        double Qsto2_new = Q_sto_2(120, rate_gluc);
         double Qsto_new = Q_sto(rate_gluc);
-        double Qgut_new = Q_gut(rand()%2, rate_gluc);
+        double Qgut_new = Q_gut(120, rate_gluc);
         double Ra_meal_new = Ra_meal(weight, rate_gluc);
 
         if ((t % 5) == 0){
-            // send
+
             reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "glucose", G_new);
             assertReplyType(c2r, reply, REDIS_REPLY_STRING);
-            printf("main(): pid =%d: stream %s: Added %s -> %f (id: %s)\n", getpid(), WRITE_STREAM, "glucose", G_new, reply->str);
+            //printf("main(): pid =%d: stream %s: Added %s -> %f (id: %s)\n", getpid(), WRITE_STREAM, "glucose", G_new, reply->str);
             freeReplyObject(reply);
+            cout<<"Glucose: "<<G_new<<endl;
         }
         if( (t % 5) == 1){
-            printf("main(): pid %d: user %s: Trying to read msg %d from stream %s\n", pid, username, read_counter, READ_STREAM);
-
-            reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", username, block, READ_STREAM);
-            double doseReceived = stod(reply->str);
+            //printf("main(): pid %d: user patient: Trying to read msg %d from stream %s\n", pid, read_counter, READ_STREAM);
+            reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", READ_STREAM);
+            char *dose = new char[64];
+            ReadStreamMsgVal(reply,0,0,1, dose);
+            double doseReceived = stod(dose);
             if (doseReceived > 0){
+                cout<<"Glucose: "<<G_new<<" Dose received: "<<doseReceived<<endl;
                 u = doseReceived;
             }else{
                 u = 0;
             }
-            assertReply(c2r, reply);
-            dumpReply(reply, 0);
+            read_counter++;
             freeReplyObject(reply);
         }
         

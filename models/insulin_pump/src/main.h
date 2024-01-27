@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <iostream>
 #include "insulin_pump.h"
 
 #define READ_STREAM "stream2"
@@ -18,5 +19,5 @@
 #define SAFE_MAX_GLUCOSE 100
 #define HARD_MAX_GLUCOSE 120
 
-insulin_pump_state next(Insulin_Pump pump, redisContext* c2r, int curr_t);
+insulin_pump_state next(Insulin_Pump pump, redisContext* c2r, int curr_t, int* read_counter);
 #endif
