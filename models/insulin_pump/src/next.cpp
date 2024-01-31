@@ -11,7 +11,7 @@ insulin_pump_state next(Insulin_Pump pump, redisContext *c2r, int curr_t, int *r
         ReadStreamMsgVal(reply,0,0,1,gluc);
         (*read_counter)++;
         double glucose_level = stod(gluc);
-        delete gluc[64];
+        delete gluc;
 
         double curr_delta = glucose_level - pump.prev_glucose;
         double old_delta = pump.prev_glucose - pump.prev_prev_glucose;
@@ -69,5 +69,6 @@ insulin_pump_state next(Insulin_Pump pump, redisContext *c2r, int curr_t, int *r
         assertReplyType(c2r, reply, REDIS_REPLY_STRING);
         //printf("main(): pid =%d: stream %s: Added %s -> %f (id: %s)\n", getpid(), WRITE_STREAM, "dose", pump.comp_dose, reply->str);
         freeReplyObject(reply);
+        return idle;
     }
 }

@@ -47,6 +47,7 @@ int main() {
     while (1){
         insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
         pump.state = next_state;
+        cout << "[" << t << "]" << "current state: " << pump.state << endl;
         
         t++;
         usleep(10000);
