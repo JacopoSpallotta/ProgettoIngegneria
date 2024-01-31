@@ -19,13 +19,15 @@ int main(int argc, char *argv[]) {
 
     // Initialize patient characteristics
     if(argc != 5){
-        fprintf(stderr, "Four arguments nedeed\n");
+        fprintf(stderr, "Only four arguments required, more where given:\n\tusage: main sex:bool, age:int, weight:int, height:int");
         return -1;
     }
+    // setup input vars
     bool sex = atoi(argv[1]);
     int age = atoi(argv[2]);
     double weight = stod(argv[3]);
     double height = stod(argv[4]);
+    //
     cout<<sex<<" "<<age<<" "<<weight<<" "<<height<<endl;
     double bmi = weight/(pow(height/100, 2));
     double b1 = log(2) / (0.14*age+29.16);
@@ -56,8 +58,8 @@ int main(int argc, char *argv[]) {
         Gtb = (Fcns-EGPb+k1*Gpb)/k2;
         Vm0 = (EGPb - Fcns)*(km0+Gtb)/Gtb;
     }else{
-        Gtb = ( (Fcns-EGPb+ke1*(Gpb-ke2))/Vg+k1*Gpb)/k2;
-        Vm0 = (EGPb-Fcns-ke1*(Gpb-ke2))*(km0+Gtb)/Gtb;
+        Gtb = ( (Fcns-EGPb+ke1*(Gpb-ke2))/Vg+k1*Gpb )/k2;
+        Vm0 = ( EGPb-Fcns-ke1*(Gpb-ke2) ) * (km0+Gtb)/Gtb;
     }
     glucose_kinetics_old gluc_kin = {Gpb,Gtb,Gb};
 
@@ -86,22 +88,18 @@ int main(int argc, char *argv[]) {
 
     double isr_b = Cpb/weight*Vc*k01;
     insulin_cpeptide_old ins_cpep = {isr_b,0,0}; 
-
+    //
     // where the output of the insulin pump will be stored
     double u;
 
-    /*  prg  */
-
     seed = (unsigned) time(NULL);
     srand(seed);
-    
+    // redis client connects to server
     printf("main(): pid %d: user patient: connecting to redis ...\n", pid);
-
     c2r = redisConnect("localhost", 6379);
-
     printf("main(): pid %d: user patient: connected to redis\n", pid);
 
-     // Delete streams if exists
+    // Delete streams if exists
     reply = RedisCommand(c2r, "DEL %s", READ_STREAM);
     assertReply(c2r, reply);
     dumpReply(reply, 0);
