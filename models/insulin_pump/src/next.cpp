@@ -4,15 +4,14 @@ using namespace std;
 insulin_pump_state next(Insulin_Pump pump, redisContext *c2r, int curr_t, int *read_counter){
 
     if (pump.state == test){
-        //printf("main(): pid %d: insulin_pump: Trying to read msg %d from stream %s\n", getpid(), *read_counter, READ_STREAM);
-
+        printf("main(): pid %d: insulin_pump: Trying to read msg %d from stream %s\n", getpid(), *read_counter, READ_STREAM);
         redisReply *reply = RedisCommand(c2r, "XREADGROUP GROUP diameter insulin_pump COUNT 1 BLOCK 1000000000 NOACK STREAMS %s >", READ_STREAM);
         
         char *gluc = new char[64];
         ReadStreamMsgVal(reply,0,0,1,gluc);
         (*read_counter)++;
         double glucose_level = stod(gluc);
-        delete gluc;
+        delete gluc[64];
 
         double curr_delta = glucose_level - pump.prev_glucose;
         double old_delta = pump.prev_glucose - pump.prev_prev_glucose;
