@@ -25,6 +25,7 @@ double risk(double G){
     }else if(G <= G_th){
         return 10* pow(f(G_th),2);
     }
+    return 0.0;
 }
 
 // A13
