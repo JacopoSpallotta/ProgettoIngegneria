@@ -47,7 +47,6 @@ insulin_pump_state next(Insulin_Pump pump, redisContext *c2r, int curr_t, int *r
             }else if(glucose_level < pump.prev_glucose && curr_delta > old_delta){
                 pump.comp_dose = 1; // MINDOSE
                 return execution;
-
             }else{
                 return idle;
             }
@@ -59,7 +58,7 @@ insulin_pump_state next(Insulin_Pump pump, redisContext *c2r, int curr_t, int *r
         redisReply *reply = RedisCommand(c2r, "XADD %s * %s -1", WRITE_STREAM, "dose");
         //printf("main(): pid =%d: stream %s: Added %s -> %f (id: %s)\n", getpid(), WRITE_STREAM, "dose", pump.comp_dose, reply->str);
         freeReplyObject(reply);
-        if( (curr_t - pump.t_old) > 5){
+        if( (curr_t - pump.t_old) > 5000){
             return test;
         }
         return idle;
