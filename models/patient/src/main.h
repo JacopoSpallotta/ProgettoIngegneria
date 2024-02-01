@@ -9,6 +9,7 @@
 #include <time.h>
 #include <cmath>
 #include "con2redis.h"
+#include "pgsql.h"
 #include "c_peptide_kinetics.h"
 #include "endog_glucose_prod.h"
 #include "glucose_kinetics.h"
@@ -17,5 +18,10 @@
 #include "rate_glucose_app.h"
 #include "renal_excretion.h"
 #include "glucose_utilization.h"
+
+#define READ_STREAM "stream1"
+#define WRITE_STREAM "stream2"
+#define ENV_STREAM "stream3"
+#define DEBUG 0
 
 #endif

@@ -1,9 +1,5 @@
 #include "main.h"
 
-#define READ_STREAM "stream1"
-#define WRITE_STREAM "stream2"
-#define DEBUG 0
-
 using namespace std;
 
 int main(int argc, char *argv[]) {
@@ -33,7 +29,7 @@ int main(int argc, char *argv[]) {
     double b1 = log(2) / (0.14*age+29.16);
     double a1;
     double fra;
-    if(bmi){
+    if(bmi <= 27){
         a1 = 0.14;
         fra = 0.76;
     }else{
@@ -108,18 +104,26 @@ int main(int argc, char *argv[]) {
     assertReply(c2r, reply);
     dumpReply(reply, 0);
 
+    reply = RedisCommand(c2r, "DEL %s", ENV_STREAM);
+    assertReply(c2r, reply);
+    dumpReply(reply, 0);
+
     /* Create streams/groups */
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
+    initStreams(c2r, ENV_STREAM);
     
     int t = 0;
 
     while (1){
-        int delta = 0;
-        if( (t%(0+60+240) >= 0) && (t % (0+60+240) < 60)){
-            cout<<t%(60+240)<<": "<<"##################################################"<<endl;
-            delta = 1;
+        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
+        char* delta_str = new char[64];
+        ReadStreamMsgVal(reply,0,0,1, delta_str);
+        int delta = atoi(delta_str);
+        if(delta){
+            cout<<"GNAM"<<endl;
         }
+
         double egp_new = EGP(kp1, ins_kin, gluc_kin, end_gluc);
         double x_l_new = X_L(end_gluc);
         double I_f_new = I_f(ins_kin, end_gluc);
@@ -147,10 +151,10 @@ int main(int argc, char *argv[]) {
         double G_t_new = G_t(gluc_kin,gluc_util);
         double G_new = G(gluc_kin);
 
-        double Qsto1_new = Q_sto_1(120, delta,rate_gluc);
-        double Qsto2_new = Q_sto_2(120, rate_gluc);
+        double Qsto1_new = Q_sto_1(105, delta,rate_gluc);
+        double Qsto2_new = Q_sto_2(105, rate_gluc);
         double Qsto_new = Q_sto(rate_gluc);
-        double Qgut_new = Q_gut(120, rate_gluc);
+        double Qgut_new = Q_gut(105, rate_gluc);
         double Ra_meal_new = Ra_meal(weight, rate_gluc);
 
         if ((t % 5) == 0){

@@ -42,10 +42,7 @@ CREATE TABLE IF NOT EXISTS LogTable (
         vid int NOT NULL,			-- variable id
         varvalue VarType,                       -- variable value
 	loginfo String4Info,                    -- extra info
+        t int NOT NULL,
         PRIMARY KEY (nanosec, vid),
         CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
 );
-
-
-
-
