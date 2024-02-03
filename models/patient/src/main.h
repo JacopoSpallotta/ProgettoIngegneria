@@ -18,10 +18,14 @@
 #include "rate_glucose_app.h"
 #include "renal_excretion.h"
 #include "glucose_utilization.h"
+#include "init_db.h"
+#include "log2db.h"
 
 #define READ_STREAM "stream1"
 #define WRITE_STREAM "stream2"
 #define ENV_STREAM "stream3"
-#define DEBUG 0
+#define DEBUG 10000000000000
+
+long get_curr_nsecs();
 
 #endif

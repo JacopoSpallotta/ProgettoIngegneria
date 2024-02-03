@@ -1,20 +1,13 @@
-#include "main.h"
-
-/* buy stock  */
+#include "log2db.h"
 
 void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, double Qsto, double EGP, double Uid, double E, double ISR){
 
     PGresult *res;
     int rows, k;
-    char trcolor[20];
     long int dbnanosec, nsafters;
     char datebuf[1000];
     char sqlcmd[1000];
 
-
-    #if (DEBUG > 1000000)
-    fprintf(stderr, "log2db(): pid = %d, varname = %s\n", pid, "x");
-    #endif
 
     sprintf(sqlcmd, "SELECT vid FROM TimeVar where ((pid = %d) AND (varname = \'G\'))", pid);
     res = db1.ExecSQLtuples(sqlcmd);
@@ -50,11 +43,6 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, do
     res = db1.ExecSQLtuples(sqlcmd);
     int vid_ISR = atoi(PQgetvalue(res, 0, PQfnumber(res, "vid")));
     PQclear(res);
-
-    #if (DEBUG > 1000000)
-    fprintf(stderr, "log2db(): vid = %d\n", vid);
-    #endif
-
 
     sprintf(sqlcmd, "BEGIN"); 
     res = db1.ExecSQLcmd(sqlcmd);
@@ -119,17 +107,16 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, do
 
     dbnanosec = strtol(PQgetvalue(res, 0, PQfnumber(res, "nanosec")), NULL, 10);
 
-    fprintf(stderr, "log2db(): inserted in LogTable (%ld, %d, %d, \'%s\')\n",
-        dbnanosec,
-        atoi(PQgetvalue(res, 0, PQfnumber(res, "vid"))),
-        atoi(PQgetvalue(res, 0, PQfnumber(res, "varvalue"))),
-        PQgetvalue(res, 0, PQfnumber(res, "loginfo"))
+     for(int i = 0; i < 7; i++){
+        fprintf(stderr, "log2db(): inserted in LogTable (%ld, %d, %d, \'%s\',%d)\n",
+            dbnanosec,
+            atoi(PQgetvalue(res, i, PQfnumber(res, "vid"))),
+            atoi(PQgetvalue(res, i, PQfnumber(res, "varvalue"))),
+            PQgetvalue(res, i, PQfnumber(res, "loginfo")),
+            atoi(PQgetvalue(res, i, PQfnumber(res, "t")))
         );
-    PQclear(res);
+    }
 
-    nsafters = nanos2day(datebuf, dbnanosec);
-
-    fprintf(stderr, "log2db(): ns = %ld = TIME_UTC = %s + %ld ns\n", dbnanosec, datebuf, nsafters);
     #endif
 
 

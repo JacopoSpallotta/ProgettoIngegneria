@@ -112,10 +112,19 @@ int main(int argc, char *argv[]) {
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
     initStreams(c2r, ENV_STREAM);
+
+    // Create and connect to database
+    Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
+    PGresult* res;
+    init_logdb(db, pid);
     
     int t = 0;
 
+    long nseconds = get_curr_nsecs();
+
     while (1){
+        long nseconds_diff = get_curr_nsecs() - nseconds;
+        log2db(db, pid, nseconds_diff, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
         char* delta_str = new char[64];
         ReadStreamMsgVal(reply,0,0,1, delta_str);
@@ -191,10 +200,16 @@ int main(int argc, char *argv[]) {
         ins_cpep = {isr_new, isr_s_new, isr_d_new};
 
         t++;
-        usleep(10000);
+        usleep(500000);
     }  // while ()
     
     redisFree(c2r);
+}
+
+long get_curr_nsecs(){
+    struct timespec ts;
+    timespec_get(&ts, TIME_UTC);
+    return ( (long) (ts.tv_sec * 1000000000L + ts.tv_nsec));
 }
 
 

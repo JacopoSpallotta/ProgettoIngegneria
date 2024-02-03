@@ -40,19 +40,35 @@ int main() {
     /* Create streams/groups */
     initStreams(c2r, READ_STREAM);
     initStreams(c2r, WRITE_STREAM);
+
+    // Create and connect to database
+    Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
+    PGresult* res;
+    init_logdb(db, pid);
+
+    long nseconds = get_curr_nsecs();
     
     int t = 0;
     Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0.0,0};
 
     while (1){
+        long nseconds_diff = get_curr_nsecs() - nseconds;
+        cout<<nseconds_diff<<endl;
+        log2db(db, pid, nseconds_diff, t, pump.state, pump.comp_dose);
         insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
         pump.state = next_state;
         cout << "[" << t << "]" << "current state: " << pump.state << endl;
         
         t++;
-        usleep(10000);
+        usleep(500000);
 
     }  // while ()
     
     redisFree(c2r);
+}
+
+long get_curr_nsecs(){
+    struct timespec ts;
+    timespec_get(&ts, TIME_UTC);
+    return ( (long) (ts.tv_sec * 1000000000L + ts.tv_nsec));
 }

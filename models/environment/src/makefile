@@ -17,7 +17,7 @@ SRC = $(wildcard *.cpp)
 OBJ = $(patsubst %.cpp, $(ODIR)/%.o, $(SRC))
 
 con2redis_OBJ=$(wildcard ../../../con2redis/obj/*.o)
-con2db_OBJ=$(wildcard ../../../con2db/obj/*.o)
+con2db_OBJ=$(wildcard ../../../con2db/*.o)
 
 
 all:	con2db con2redis $(BDIR)/main
@@ -33,7 +33,7 @@ $(ODIR)/%.o: %.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(BDIR)/main: $(OBJ) $(DEPS)
-	$(CC) -o $@ $(OBJ) $(con2redis_OBJ) $(CFLAGS)
+	$(CC) -o $@ $(OBJ) $(con2redis_OBJ) $(con2db_OBJ) $(CFLAGS)
 
 
 .PHONY: clean

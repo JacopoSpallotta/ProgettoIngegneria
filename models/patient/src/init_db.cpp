@@ -1,15 +1,18 @@
-#include "main.h"
-
-/* buy stock  */
+#include "init_db.h"
 
 void init_logdb(Con2DB db1, int pid) {
 
     PGresult *res;
     int rows, k;
     char sqlcmd[1000];
- 
+
  
  /*  init  */
+    
+    // Delete tables from prevoius runs, this process HAS TO start FIRST
+    sprintf(sqlcmd, "TRUNCATE LogTable,TimeVar RESTART IDENTITY;"); 
+    res = db1.ExecSQLcmd(sqlcmd);
+    PQclear(res);
  
     sprintf(sqlcmd, "BEGIN"); 
     res = db1.ExecSQLcmd(sqlcmd);
@@ -70,19 +73,21 @@ void init_logdb(Con2DB db1, int pid) {
 
       
 #if (DEBUG > 0)
-      sprintf(sqlcmd, "SELECT * FROM Timevar where ((pid = %d) AND (varname = 'x'))", pid);
+    sprintf(sqlcmd, "SELECT * FROM Timevar where ((pid = %d) AND ( (varname = 'G') OR (varname='I') OR (varname='Qsto') OR (varname='EGP') OR (varname='Uid') OR (varname='E') OR (varname='ISR') ));", pid);
 
     res = db1.ExecSQLtuples(sqlcmd);
     rows = PQntuples(res);
       
-    fprintf(stderr, "initdb(): inserted in Timevar (%d, %d, %s, %s, %s, %s)\n",
-	    atoi(PQgetvalue(res, 0, PQfnumber(res, "vid"))),
-	    atoi(PQgetvalue(res, 0, PQfnumber(res, "pid"))),
-	    PQgetvalue(res, 0, PQfnumber(res, "sysname")),
-	    PQgetvalue(res, 0, PQfnumber(res, "varname")),
-	    PQgetvalue(res, 0, PQfnumber(res, "vardomain")),
-	    PQgetvalue(res, 0, PQfnumber(res, "varinfo"))
-	    );
+    for(int i = 0; i < 7; i++){ 
+      fprintf(stderr, "initdb(): inserted in Timevar (%d, %d, %s, %s, %s, %s)\n",
+        atoi(PQgetvalue(res, i, PQfnumber(res, "vid"))),
+        atoi(PQgetvalue(res, i, PQfnumber(res, "pid"))),
+        PQgetvalue(res, i, PQfnumber(res, "sysname")),
+        PQgetvalue(res, i, PQfnumber(res, "varname")),
+        PQgetvalue(res, i, PQfnumber(res, "vardomain")),
+        PQgetvalue(res, i, PQfnumber(res, "varinfo"))
+        );
+    }
 #endif
 
 

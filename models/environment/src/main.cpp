@@ -36,6 +36,13 @@ int main() {
 
     /* Create streams/groups */
     initStreams(c2r, WRITE_STREAM);
+
+    // Create and connect to database
+    Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
+    PGresult* res;
+    init_logdb(db, pid);
+
+    long nseconds = get_curr_nsecs();
     
     int t = 0;
     int delta = 0;
@@ -43,6 +50,8 @@ int main() {
     int fasting_duration = 480;
 
     while (1){
+        long nseconds_diff = get_curr_nsecs() - nseconds;
+        log2db(db, pid, nseconds_diff, t, delta);
         if( (t % (meal_duration+fasting_duration) >= 0) && (t % (meal_duration+fasting_duration) < meal_duration)){
             delta = 1;
         }else{
@@ -54,9 +63,15 @@ int main() {
         freeReplyObject(reply);
         
         t++;
-        usleep(10000);
+        usleep(500000);
 
     }  // while ()
     
     redisFree(c2r);
+}
+
+long get_curr_nsecs(){
+    struct timespec ts;
+    timespec_get(&ts, TIME_UTC);
+    return ( (long) (ts.tv_sec * 1000000000L + ts.tv_nsec));
 }

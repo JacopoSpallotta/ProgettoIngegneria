@@ -1,4 +1,4 @@
-#include "main.h"
+#include "log2db.h"
 
 /* buy stock  */
 
@@ -11,11 +11,6 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
     char sqlcmd[1000];
 
 
-
-    #if (DEBUG > 1000000)
-    fprintf(stderr, "log2db(): pid = %d, varname = %s\n", pid, "x");
-    #endif
-
     sprintf(sqlcmd, "SELECT vid FROM TimeVar where ((pid = %d) AND (varname = \'pump_state\'))", pid);
     res = db1.ExecSQLtuples(sqlcmd);
     int vid_state = atoi(PQgetvalue(res, 0, PQfnumber(res, "vid")));
@@ -25,11 +20,6 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
     res = db1.ExecSQLtuples(sqlcmd);
     int vid_comp_dose = atoi(PQgetvalue(res, 0, PQfnumber(res, "vid")));
     PQclear(res);
-
-
-    #if (DEBUG > 1000000)
-    fprintf(stderr, "log2db(): vid = %d\n", vid);
-    #endif
 
     char pump_state_str[30];
 
@@ -82,22 +72,18 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
 
     dbnanosec = strtol(PQgetvalue(res, 0, PQfnumber(res, "nanosec")), NULL, 10);
 
-    fprintf(stderr, "log2db(): inserted in LogTable (%ld, %d, %d, \'%s\')\n",
-        dbnanosec,
-        atoi(PQgetvalue(res, 0, PQfnumber(res, "vid"))),
-        atoi(PQgetvalue(res, 0, PQfnumber(res, "varvalue"))),
-        PQgetvalue(res, 0, PQfnumber(res, "loginfo"))
+    for(int i = 0; i < 2; i++){
+        fprintf(stderr, "log2db(): inserted in LogTable (%ld, %d, %d, \'%s\',%d)\n",
+            dbnanosec,
+            atoi(PQgetvalue(res, i, PQfnumber(res, "vid"))),
+            atoi(PQgetvalue(res, i, PQfnumber(res, "varvalue"))),
+            PQgetvalue(res, i, PQfnumber(res, "loginfo")),
+            atoi(PQgetvalue(res, i, PQfnumber(res, "t")))
         );
+    }
     PQclear(res);
 
-    nsafters = nanos2day(datebuf, dbnanosec);
-
-    fprintf(stderr, "log2db(): ns = %ld = TIME_UTC = %s + %ld ns\n", dbnanosec, datebuf, nsafters);
     #endif
-
-
-
-
         
 }  /*   log2db()  */
  
