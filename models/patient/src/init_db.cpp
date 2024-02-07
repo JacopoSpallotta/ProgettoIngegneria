@@ -20,21 +20,21 @@ void init_logdb(Con2DB db1, int pid) {
 
     // Saving G(t)
     sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-                pid, "Patient", "G", "double", "Plasma glucose concentration");
+                pid, "Patient", "G", "double", "Plasma glucose concentration (mg/dL)");
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
     // Logging I(t)
     sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-	            pid, "Patient", "I", "double", "Plasma insulin concentration");
+	            pid, "Patient", "I", "double", "Plasma insulin concentration (pmol/L)");
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
     // Logging Qsto(t)
     sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-	            pid, "Patient", "Qsto", "double", "Amount of glucose in the stomach");
+	            pid, "Patient", "Qsto", "double", "Amount of glucose in the stomach (mg)");
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
@@ -48,21 +48,21 @@ void init_logdb(Con2DB db1, int pid) {
     
     // Logging Uid(t)
     sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-	            pid, "Patient", "Uid", "double", "Insulin-dependent utilization");
+	            pid, "Patient", "Uid", "double", "Insulin-dependent utilization (mg/kg/min)");
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
     // Logging E(t)
     sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-	            pid, "Patient", "E", "double", "Renal excretion");
+	            pid, "Patient", "E", "double", "Renal excretion (mg/kg/min)");
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
     // Logging ISR(t)
     sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-	            pid, "Patient", "ISR", "double", "Insulin and c-peptide secretion");
+	            pid, "Patient", "ISR", "double", "Insulin and c-peptide secretion (pmol/min)");
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);

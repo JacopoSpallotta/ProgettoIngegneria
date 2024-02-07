@@ -25,7 +25,7 @@ void init_logdb(Con2DB db1, int pid) {
 
   // Logging comp_dose
   sprintf(sqlcmd, "INSERT INTO Timevar VALUES (DEFAULT, %d, \'%s\', \'%s\', \'%s\', \'%s\') ON CONFLICT DO NOTHING",
-            pid, "Insulin pump", "comp_dose", "double", "Computed dose by insulin pump");
+            pid, "Insulin pump", "comp_dose", "double", "dose (pmol/L)");
 
   res = db1.ExecSQLcmd(sqlcmd);
   PQclear(res);
