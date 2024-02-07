@@ -26,10 +26,10 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
     switch (pump_state)
     {
     case 0:
-        sprintf(pump_state_str, "test");
+        sprintf(pump_state_str, "idle");
         break;
     case 1:
-        sprintf(pump_state_str, "idle");
+        sprintf(pump_state_str, "test");
         break;
     case 2:
         sprintf(pump_state_str, "execution");
