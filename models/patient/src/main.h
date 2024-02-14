@@ -24,7 +24,7 @@
 #define READ_STREAM "stream1"
 #define WRITE_STREAM "stream2"
 #define ENV_STREAM "stream3"
-#define DEBUG 10000000000000
+#define DEBUG 0
 
 long get_curr_nsecs();
 

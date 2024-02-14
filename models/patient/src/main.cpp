@@ -18,13 +18,17 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Only four arguments required, more where given:\n\tusage: main sex:bool, age:int, weight:int, height:int");
         return -1;
     }
+    
+    /*int ciao = 0;
+    printf("%d\n",pid);
+    while(ciao == 0){
+        sleep(5);
+    }*/
     // setup input vars
     bool sex = atoi(argv[1]);
     int age = atoi(argv[2]);
     double weight = stod(argv[3]);
     double height = stod(argv[4]);
-    //
-    cout<<sex<<" "<<age<<" "<<weight<<" "<<height<<endl;
     double bmi = weight/(pow(height/100, 2));
     double b1 = log(2) / (0.14*age+29.16);
     double a1;
@@ -36,13 +40,18 @@ int main(int argc, char *argv[]) {
         a1 = 0.152;
         fra = 0.78;
     }
-    double bsa = 0.007194*(pow(height,0.725)*pow(weight,0.425));
+    double bsa = 0.007194 * pow(height,0.725) * pow(weight,0.425);
     double Vc;
     if (sex == 1){
         Vc = 1.92*bsa+0.64;
     }else{
         Vc = 1.11*bsa+2.04;
     }
+    double k12 = fra*b1+(1-fra)*a1;
+    double k01 = (a1*b1)/k12;
+    double k21 = a1+b1-k12-k01;
+    double SRb = Cpb/weight*Vc*k01;
+    
 
     Patient patient = {sex,age,weight,height,bmi,bsa,b1,a1,fra,Vc};
 
@@ -59,10 +68,12 @@ int main(int argc, char *argv[]) {
     }
     glucose_kinetics_old gluc_kin = {Gpb,Gtb,Gb};
 
-    double Ipb= Ib*Vi;
-    double HEb = max((SRb-m4*Ipb)/(SRb+m2*Ipb), 0.0);
+    double Ipb= Ib*Vi; //2,214
+    //double HEb = max((SRb-m4*Ipb)/(SRb+m2*Ipb), 0.0); 
+    double HEb = 0.51;
     double m3_0 = (HEb*m1)/(1-HEb);
-    double Ilb = (Ipb*m2+SRb)/(m1+m3_0);
+    //double Ilb = (Ipb*m2+SRb)/(m1+m3_0);
+    double Ilb= 15;
     double Ievb = Ipb*m5/m6;
     insulin_kinetics_old ins_kin = {Ilb,Ipb,Ievb,Ib,m3_0,HEb};
 
@@ -76,17 +87,15 @@ int main(int argc, char *argv[]) {
     
     renal_exrection_old ren_excr = {0};
 
-    double k12 = fra*b1+(1-fra)*a1;
-    double k01 = (a1*b1)/k12;
-    double k21 = a1+b1-k12-k01;
     double cp2b = Cpb*k21/k12;
     cpeptide_kinetics_old cpep_kin = {Cpb,cp2b};
 
-    double isr_b = Cpb/weight*Vc*k01;
+    double isr_b = Cpb*Vc*k01;
+    cout<<isr_b<<endl;
     insulin_cpeptide_old ins_cpep = {isr_b,0,0}; 
-    //
+    
     // where the output of the insulin pump will be stored
-    double u;
+    double u = 0;
 
     seed = (unsigned) time(NULL);
     srand(seed);
@@ -121,17 +130,15 @@ int main(int argc, char *argv[]) {
     int t = 0;
 
     long nseconds = get_curr_nsecs();
+    log2db(db, pid, nseconds, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
 
     while (1){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        log2db(db, pid, nseconds_diff, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
         char* delta_str = new char[64];
         ReadStreamMsgVal(reply,0,0,1, delta_str);
         int delta = atoi(delta_str);
-        if(delta){
-            cout<<"GNAM"<<endl;
-        }
+        //int delta = 1;
 
         double egp_new = EGP(kp1, ins_kin, gluc_kin, end_gluc);
         double x_l_new = X_L(end_gluc);
@@ -170,22 +177,16 @@ int main(int argc, char *argv[]) {
 
             reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "glucose", G_new);
             assertReplyType(c2r, reply, REDIS_REPLY_STRING);
-            //printf("main(): pid =%d: stream %s: Added %s -> %f (id: %s)\n", getpid(), WRITE_STREAM, "glucose", G_new, reply->str);
             freeReplyObject(reply);
-            cout<<"Glucose: "<<G_new<<endl;
         }
         if( (t % 5) == 1){
-            //printf("main(): pid %d: user patient: Trying to read msg %d from stream %s\n", pid, read_counter, READ_STREAM);
             reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", READ_STREAM);
             char *dose = new char[64];
             ReadStreamMsgVal(reply,0,0,1, dose);
+
             double doseReceived = stod(dose);
-            if (doseReceived > 0){
-                cout<<"Glucose: "<<G_new<<" Dose received: "<<doseReceived<<endl;
-                u = doseReceived;
-            }else{
-                u = 0;
-            }
+            cout<<"Glucose: "<<G_new<<" Dose received: "<<doseReceived<<endl;
+            u = doseReceived;
             read_counter++;
             freeReplyObject(reply);
         }
@@ -200,7 +201,9 @@ int main(int argc, char *argv[]) {
         ins_cpep = {isr_new, isr_s_new, isr_d_new};
 
         t++;
-        usleep(500000);
+        log2db(db, pid, nseconds_diff, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
+
+        usleep(10000);
     }  // while ()
     
     redisFree(c2r);

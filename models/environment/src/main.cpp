@@ -9,7 +9,12 @@ int main() {
     int read_counter = 0;
     int pid = getpid();
     unsigned seed;
-    
+    /*
+    printf("%d\n",pid);
+    int ciao = 0;
+    while(ciao == 0){
+        sleep(5);
+    }*/
     /*  prg  */
 
     #if (DEBUG > 0)
@@ -48,10 +53,10 @@ int main() {
     int delta = 0;
     int meal_duration = 60;
     int fasting_duration = 480;
+    log2db(db, pid, nseconds, t, delta);
 
     while (1){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        log2db(db, pid, nseconds_diff, t, delta);
         if( (t % (meal_duration+fasting_duration) >= 0) && (t % (meal_duration+fasting_duration) < meal_duration)){
             delta = 1;
         }else{
@@ -61,9 +66,10 @@ int main() {
         redisReply *reply = RedisCommand(c2r, "XADD %s * %s %d", WRITE_STREAM, "isEating", delta);
         assertReplyType(c2r, reply, REDIS_REPLY_STRING);
         freeReplyObject(reply);
-        
+
         t++;
-        usleep(500000);
+        log2db(db, pid, nseconds_diff, t, delta);
+        usleep(10000);
 
     }  // while ()
     

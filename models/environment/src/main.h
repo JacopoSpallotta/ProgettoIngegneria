@@ -11,7 +11,7 @@
 #include <iostream>
 #include "log2db.h"
 #include "init_db.h"
-#define DEBUG 1000000000000
+#define DEBUG 0
 
 #define WRITE_STREAM "stream3"
 

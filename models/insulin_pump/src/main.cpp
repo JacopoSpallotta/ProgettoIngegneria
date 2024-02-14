@@ -4,12 +4,18 @@ using namespace std;
 
 
 int main() {
+    
     redisContext *c2r;
     redisReply *reply;
     int read_counter = 0;
     int pid = getpid();
     unsigned seed;
-    
+    /*
+    printf("%d\n",pid);
+    int ciao = 0;
+    while(ciao == 0){
+        sleep(5);
+    }*/
     /*  prg  */
 
     #if (DEBUG > 0)
@@ -49,18 +55,18 @@ int main() {
     long nseconds = get_curr_nsecs();
     
     int t = 0;
-    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0.0,0};
+    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,100,100};
+    log2db(db, pid, nseconds, t, pump.state, pump.comp_dose);
 
     while (1){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        cout<<nseconds_diff<<endl;
-        log2db(db, pid, nseconds_diff, t, pump.state, pump.comp_dose);
         insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
         pump.state = next_state;
-        cout << "[" << t << "]" << "current state: " << pump.state << endl;
         
         t++;
-        usleep(500000);
+
+        log2db(db, pid, nseconds_diff, t, pump.state, pump.comp_dose);
+        usleep(10000);
 
     }  // while ()
     
