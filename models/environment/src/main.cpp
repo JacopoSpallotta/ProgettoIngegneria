@@ -55,7 +55,7 @@ int main() {
     int fasting_duration = 480;
     log2db(db, pid, nseconds, t, delta);
 
-    while (1){
+    while (t <= 1640){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         if( (t % (meal_duration+fasting_duration) >= 0) && (t % (meal_duration+fasting_duration) < meal_duration)){
             delta = 1;

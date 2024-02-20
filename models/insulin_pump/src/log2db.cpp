@@ -72,7 +72,7 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
 
     dbnanosec = strtol(PQgetvalue(res, 0, PQfnumber(res, "nanosec")), NULL, 10);
 
-    for(int i = 0; i < 2; i++){
+    for(int i = 0; i < rows; i++){
         fprintf(stderr, "log2db(): inserted in LogTable (%ld, %d, %d, \'%s\',%d)\n",
             dbnanosec,
             atoi(PQgetvalue(res, i, PQfnumber(res, "vid"))),

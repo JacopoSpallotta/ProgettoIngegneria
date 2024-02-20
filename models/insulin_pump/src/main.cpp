@@ -55,10 +55,10 @@ int main() {
     long nseconds = get_curr_nsecs();
     
     int t = 0;
-    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0,0};
+    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0,0,0};
     log2db(db, pid, nseconds, t, pump.state, pump.comp_dose);
 
-    while (1){
+    while (t <= 1640){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
         pump.state = next_state;

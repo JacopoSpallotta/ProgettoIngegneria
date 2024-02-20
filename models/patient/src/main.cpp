@@ -132,7 +132,7 @@ int main(int argc, char *argv[]) {
     long nseconds = get_curr_nsecs();
     log2db(db, pid, nseconds, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
 
-    while (1){
+    while (t <= 1640){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
         char* delta_str = new char[64];
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]) {
 
         if ((t % TEST_TIME) == 0){
 
-            reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "glucose", G_new);
+            reply = RedisCommand(c2r, "XADD %s * %s %.2f", WRITE_STREAM, "glucose", G_new);
             assertReplyType(c2r, reply, REDIS_REPLY_STRING);
             freeReplyObject(reply);
         }

@@ -17,9 +17,9 @@
 #define READ_STREAM "stream2"
 #define WRITE_STREAM "stream1"
 #define DEBUG 0
-#define SAFE_MIN_GLUCOSE 90
+#define SAFE_MIN_GLUCOSE 95
 #define HARD_MIN_GLUCOSE 50
-#define SAFE_MAX_GLUCOSE 110
+#define SAFE_MAX_GLUCOSE 105
 #define HARD_MAX_GLUCOSE 120
 #define TEST_TIME 10
 

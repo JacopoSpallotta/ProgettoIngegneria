@@ -13,4 +13,5 @@ typedef struct Insulin_Pump{
     double prev_prev_glucose;
     int t_old;
     double sum_delta;
+    double sum_insulin;
 }Insulin_Pump;

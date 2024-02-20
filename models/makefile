@@ -2,8 +2,9 @@
 ENVIDIR = environment/src
 INSLPMPIDIR = insulin_pump/src
 PATIDIR = patient/src
+MONITORDIR = monitors/src
 
-SUBDIRS = $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR)
+SUBDIRS = $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR) $(MONITORDIR)
 
 all:
 	@echo ""
@@ -23,6 +24,9 @@ insl:
 
 pat:
 	@cd $(PATDIR) ; $(MAKE)
+
+monitor:
+	@cd $(MONITORDIR) ; $(MAKE)
 
 .PHONY: clean
 

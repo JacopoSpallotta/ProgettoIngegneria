@@ -46,3 +46,8 @@ CREATE TABLE IF NOT EXISTS LogTable (
         PRIMARY KEY (nanosec, vid),
         CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
 );
+
+CREATE TABLE IF NOT EXISTS MonitorTable (
+        id serial PRIMARY KEY,			
+        value int NOT NULL
+);

@@ -15,7 +15,6 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
 
         double curr_delta = glucose_level - pump.prev_glucose;
         double old_delta = pump.prev_glucose - pump.prev_prev_glucose;
-        pump.sum_delta += curr_delta;
         pump.t_old = curr_t;
         cout<<"T: "<<curr_t<<"["<<endl;
         cout<<"\tCurr_delta: "<<curr_delta<<endl;
@@ -23,12 +22,18 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
         cout<<"\tGlucose_level: "<<glucose_level<<endl;
         cout<<"\tPrev_glucose: "<<pump.prev_glucose<<endl;
         cout<<"\tPrev_prev_glucose: "<<pump.prev_prev_glucose<<endl;
-        cout<<"\tSum_delta: "<<pump.sum_delta<<endl;
+        cout<<"\tSum_insulin: "<<pump.sum_insulin<<endl;
         cout<<"]\n"<<endl;
 
-        if(glucose_level >= SAFE_MIN_GLUCOSE && glucose_level <= SAFE_MAX_GLUCOSE){
-            if(glucose_level > pump.prev_glucose && (curr_delta >= old_delta) && (pump.sum_delta >= 2)){
-                pump.comp_dose = round(pump.sum_delta/2);
+        if (glucose_level >= HARD_MAX_GLUCOSE){
+            pump.comp_dose = round((pump.prev_glucose-100)/4);
+            pump.prev_prev_glucose = pump.prev_glucose;
+            pump.prev_glucose = glucose_level;
+            return execution;
+
+        } else if(glucose_level >= SAFE_MIN_GLUCOSE && glucose_level <= SAFE_MAX_GLUCOSE){
+            if(glucose_level > pump.prev_glucose && (curr_delta >= old_delta)){
+                pump.comp_dose = round((pump.prev_glucose-100)/4);
 
                 if(pump.comp_dose == 0){
                     pump.comp_dose = 2; // MINDOSE
@@ -38,7 +43,6 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
                 return execution;
             }else{
                 pump.comp_dose = 0;
-                pump.sum_delta = 0;
                 pump.prev_prev_glucose = pump.prev_glucose;
                 pump.prev_glucose = glucose_level;
                 return execution;
@@ -47,12 +51,11 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
             pump.comp_dose = 0;
             pump.prev_prev_glucose = pump.prev_glucose;
             pump.prev_glucose = glucose_level;
-            pump.sum_delta = 0;
             return execution;
 
         } else if (glucose_level > SAFE_MAX_GLUCOSE){
-            if (glucose_level > pump.prev_glucose && pump.sum_delta >= 2){
-                pump.comp_dose = round(pump.sum_delta/2);
+            if (glucose_level > pump.prev_glucose){
+                pump.comp_dose = round((pump.prev_glucose-100)/4);
 
                 if(pump.comp_dose <= 0){
                     pump.comp_dose = 2; // MINDOSE
@@ -61,20 +64,19 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
                 pump.prev_glucose = glucose_level;
                 return execution;
 
-            }else if(glucose_level == pump.prev_glucose && pump.sum_delta >= 2 ){
+            }else if(glucose_level == pump.prev_glucose ){
                 pump.comp_dose = 2; // MINDOSE
                 pump.prev_prev_glucose = pump.prev_glucose;
                 pump.prev_glucose = glucose_level;
                 return execution;
 
-            }else if(glucose_level < pump.prev_glucose && curr_delta > old_delta && pump.sum_delta >= 2 ){
+            }else if(glucose_level < pump.prev_glucose && curr_delta > old_delta ){
                 pump.comp_dose = 2; // MINDOSE
                 pump.prev_prev_glucose = pump.prev_glucose;
                 pump.prev_glucose = glucose_level;
                 return execution;
             }else{
                 pump.comp_dose = 0;
-                pump.sum_delta = 0;
                 pump.prev_prev_glucose = pump.prev_glucose;
                 pump.prev_glucose = glucose_level;
                 return execution;
@@ -89,6 +91,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
     }
     if(pump.state == execution){
         cout<<"Dose: "<<pump.comp_dose<<endl;
+        pump.sum_insulin += pump.comp_dose;
         redisReply *reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "dose", pump.comp_dose);
         assertReplyType(c2r, reply, REDIS_REPLY_STRING);
         freeReplyObject(reply);
