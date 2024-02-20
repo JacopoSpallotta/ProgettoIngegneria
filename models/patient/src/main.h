@@ -25,6 +25,7 @@
 #define WRITE_STREAM "stream2"
 #define ENV_STREAM "stream3"
 #define DEBUG 0
+#define TEST_TIME 10
 
 long get_curr_nsecs();
 

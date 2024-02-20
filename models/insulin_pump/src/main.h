@@ -19,8 +19,9 @@
 #define DEBUG 0
 #define SAFE_MIN_GLUCOSE 90
 #define HARD_MIN_GLUCOSE 50
-#define SAFE_MAX_GLUCOSE 100
+#define SAFE_MAX_GLUCOSE 110
 #define HARD_MAX_GLUCOSE 120
+#define TEST_TIME 10
 
 insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, int curr_t, int* read_counter);
 long get_curr_nsecs();

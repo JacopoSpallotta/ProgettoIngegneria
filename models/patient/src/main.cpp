@@ -173,20 +173,19 @@ int main(int argc, char *argv[]) {
         double Qgut_new = Q_gut(105, rate_gluc);
         double Ra_meal_new = Ra_meal(weight, rate_gluc);
 
-        if ((t % 5) == 0){
+        if ((t % TEST_TIME) == 0){
 
             reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "glucose", G_new);
             assertReplyType(c2r, reply, REDIS_REPLY_STRING);
             freeReplyObject(reply);
         }
-        if( (t % 5) == 1){
+        if( (t % TEST_TIME) == 1){
             reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", READ_STREAM);
             char *dose = new char[64];
             ReadStreamMsgVal(reply,0,0,1, dose);
 
-            double doseReceived = stod(dose);
-            cout<<"Glucose: "<<G_new<<" Dose received: "<<doseReceived<<endl;
-            u = doseReceived;
+            u = stod(dose);
+            cout<<"T: "<<t<<" Glucose: "<<G_new<<" Dose received: "<<u<<endl;
             read_counter++;
             freeReplyObject(reply);
         }
