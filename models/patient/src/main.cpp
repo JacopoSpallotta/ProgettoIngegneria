@@ -9,7 +9,6 @@ int main(int argc, char *argv[]) {
     #endif
     redisContext *c2r;
     redisReply *reply;
-    int read_counter = 0;
     unsigned seed;
     int pid = getpid();
 
@@ -29,6 +28,9 @@ int main(int argc, char *argv[]) {
     int age = atoi(argv[2]);
     double weight = stod(argv[3]);
     double height = stod(argv[4]);
+
+    // Patient values
+
     double bmi = weight/(pow(height/100, 2));
     double b1 = log(2) / (0.14*age+29.16);
     double a1;
@@ -50,11 +52,7 @@ int main(int argc, char *argv[]) {
     double k12 = fra*b1+(1-fra)*a1;
     double k01 = (a1*b1)/k12;
     double k21 = a1+b1-k12-k01;
-    double SRb = Cpb/weight*Vc*k01;
     
-
-    Patient patient = {sex,age,weight,height,bmi,bsa,b1,a1,fra,Vc};
-
     // Initialize structs for old functions values
     double Gpb = Gb*Vg;
     double Gtb;
@@ -68,12 +66,12 @@ int main(int argc, char *argv[]) {
     }
     glucose_kinetics_old gluc_kin = {Gpb,Gtb,Gb};
 
-    double Ipb= Ib*Vi; //2,214
+    double Ipb = Ib*Vi; 
     //double HEb = max((SRb-m4*Ipb)/(SRb+m2*Ipb), 0.0); 
     double HEb = 0.51;
     double m3_0 = (HEb*m1)/(1-HEb);
     //double Ilb = (Ipb*m2+SRb)/(m1+m3_0);
-    double Ilb= 15;
+    double Ilb = 15;
     double Ievb = Ipb*m5/m6;
     insulin_kinetics_old ins_kin = {Ilb,Ipb,Ievb,Ib,m3_0,HEb};
 
@@ -124,15 +122,13 @@ int main(int argc, char *argv[]) {
 
     // Create and connect to database
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
-    PGresult* res;
     init_logdb(db, pid);
     
     int t = 0;
-
-    long nseconds = get_curr_nsecs();
+    long nseconds = 0;
     log2db(db, pid, nseconds, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
 
-    while (t <= 1640){
+    while (t <= 2*MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
         char* delta_str = new char[64];
@@ -186,7 +182,6 @@ int main(int argc, char *argv[]) {
 
             u = stod(dose);
             cout<<"T: "<<t<<" Glucose: "<<G_new<<" Dose received: "<<u<<endl;
-            read_counter++;
             freeReplyObject(reply);
         }
         

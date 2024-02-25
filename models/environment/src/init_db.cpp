@@ -5,7 +5,6 @@
 void init_logdb(Con2DB db1, int pid) {
 
   PGresult *res;
-  int rows, k;
   char sqlcmd[1000];
 
 /*  init  */
@@ -28,6 +27,8 @@ void init_logdb(Con2DB db1, int pid) {
 
       
 #if (DEBUG > 0)
+  int rows;
+
   sprintf(sqlcmd, "SELECT * FROM Timevar where ((pid = %d) AND (varname = 'delta'))", pid);
 
   res = db1.ExecSQLtuples(sqlcmd);

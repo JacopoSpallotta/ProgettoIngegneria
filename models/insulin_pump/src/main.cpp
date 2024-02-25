@@ -49,16 +49,15 @@ int main() {
 
     // Create and connect to database
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
-    PGresult* res;
     init_logdb(db, pid);
 
-    long nseconds = get_curr_nsecs();
+    long nseconds = 0;
     
     int t = 0;
-    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0,0,0};
+    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0,0};
     log2db(db, pid, nseconds, t, pump.state, pump.comp_dose);
 
-    while (t <= 1640){
+    while (t <= 2*MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
         pump.state = next_state;

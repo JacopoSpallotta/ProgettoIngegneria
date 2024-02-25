@@ -3,11 +3,7 @@
 void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, double Qsto, double EGP, double Uid, double E, double ISR){
 
     PGresult *res;
-    int rows, k;
-    long int dbnanosec, nsafters;
-    char datebuf[1000];
     char sqlcmd[1000];
-
 
     sprintf(sqlcmd, "SELECT vid FROM TimeVar where ((pid = %d) AND (varname = \'G\'))", pid);
     res = db1.ExecSQLtuples(sqlcmd);
@@ -99,6 +95,8 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, do
     #if (DEBUG > 0)
 
         // fprintf(stderr, "log2db(): check insertion\n");
+    int rows;
+    long int dbnanosec;
 
     sprintf(sqlcmd, "SELECT * FROM LogTable where (nanosec = %ld)", nanosec);
 
@@ -107,7 +105,7 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, do
 
     dbnanosec = strtol(PQgetvalue(res, 0, PQfnumber(res, "nanosec")), NULL, 10);
 
-     for(int i = 0; i < 7; i++){
+     for(int i = 0; i < rows; i++){
         fprintf(stderr, "log2db(): inserted in LogTable (%ld, %d, %d, \'%s\',%d)\n",
             dbnanosec,
             atoi(PQgetvalue(res, i, PQfnumber(res, "vid"))),

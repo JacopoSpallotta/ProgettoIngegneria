@@ -4,9 +4,7 @@
 
 void init_logdb(Con2DB db1, int pid) {
 
-  PGresult *res;
-  int rows, k;
-  
+  PGresult *res;  
   char sqlcmd[1000];
 
 /*  init  */  
@@ -38,12 +36,14 @@ void init_logdb(Con2DB db1, int pid) {
 
       
 #if (DEBUG > 0)
+    int rows;
+
     sprintf(sqlcmd, "SELECT * FROM Timevar where ((pid = %d) AND ( (varname = 'pump_state') OR (varname = 'comp_dose')) )", pid);
 
     res = db1.ExecSQLtuples(sqlcmd);
     rows = PQntuples(res);
 
-    for(int i = 0; i < 2; i++){ 
+    for(int i = 0; i < rows; i++){ 
       fprintf(stderr, "initdb(): inserted in Timevar (%d, %d, %s, %s, %s, %s)\n",
         atoi(PQgetvalue(res, i, PQfnumber(res, "vid"))),
         atoi(PQgetvalue(res, i, PQfnumber(res, "pid"))),

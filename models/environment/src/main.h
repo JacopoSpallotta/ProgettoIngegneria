@@ -12,6 +12,10 @@
 #include "log2db.h"
 #include "init_db.h"
 #define DEBUG 0
+#define MINUTES_PER_DAY 1640
+#define MEAL_DURATION 60
+#define FASTING_DURATION 480
+
 
 #define WRITE_STREAM "stream3"
 

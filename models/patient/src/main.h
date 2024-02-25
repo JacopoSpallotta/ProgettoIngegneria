@@ -26,6 +26,7 @@
 #define ENV_STREAM "stream3"
 #define DEBUG 0
 #define TEST_TIME 10
+#define MINUTES_PER_DAY 1640
 
 long get_curr_nsecs();
 

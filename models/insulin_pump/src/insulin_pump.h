@@ -1,6 +1,6 @@
 #include "main.h"
 
-typedef enum {idle,test,execution,fault} insulin_pump_state;
+typedef enum {idle,test,execution} insulin_pump_state;
 typedef struct Insulin_Pump{
     const int HARD_MIN_GLUCOSE;
     const int SAFE_MIN_GLUCOSE;
@@ -12,6 +12,5 @@ typedef struct Insulin_Pump{
     double prev_glucose;
     double prev_prev_glucose;
     int t_old;
-    double sum_delta;
     double sum_insulin;
 }Insulin_Pump;

@@ -6,7 +6,6 @@ using namespace std;
 int main() {
     redisContext *c2r;
     redisReply *reply;
-    int read_counter = 0;
     int pid = getpid();
     unsigned seed;
     /*
@@ -44,20 +43,17 @@ int main() {
 
     // Create and connect to database
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
-    PGresult* res;
     init_logdb(db, pid);
 
-    long nseconds = get_curr_nsecs();
+    long nseconds = 0;
     
     int t = 0;
     int delta = 0;
-    int meal_duration = 60;
-    int fasting_duration = 480;
     log2db(db, pid, nseconds, t, delta);
 
-    while (t <= 1640){
+    while (t <= 2*MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        if( (t % (meal_duration+fasting_duration) >= 0) && (t % (meal_duration+fasting_duration) < meal_duration)){
+        if( (t % (MEAL_DURATION+FASTING_DURATION) >= 0) && (t % (MEAL_DURATION+FASTING_DURATION) < MEAL_DURATION)){
             delta = 1;
         }else{
             delta = 0;

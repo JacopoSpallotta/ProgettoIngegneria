@@ -30,10 +30,11 @@ const double m5 = 0.26;
 const double m6 = 0.017; 
 const double m2 = 0.268;
 const double m1 = 0.314;
-const double Gb = 127;
+const double Gb = 100;
 const double G_th = 50;
 const double h = 98.7;
 const double Heb = 0.51; 
+const double SRb = 737.5;
 const double r1 = 0.7419;
 const double r2 = 0.0807;
 const double Fcns = 1;
@@ -41,19 +42,6 @@ const double Cpb = 200;
 const double F = 0.9;
 
 const double T = 0.1;
-
-struct Patient{
-    bool sex;
-    int age;
-    double weight;
-    double height;
-    double bmi;
-    double bsa;
-    double b1;
-    double a1;
-    double fra;
-    double vc;
-};
 
 struct glucose_kinetics_old{
     double G_p;

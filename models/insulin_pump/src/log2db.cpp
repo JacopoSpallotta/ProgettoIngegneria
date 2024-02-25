@@ -5,9 +5,6 @@
 void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pump_state, double comp_dose){
 
     PGresult *res;
-    int rows, k;
-    long int dbnanosec, nsafters;
-    char datebuf[1000];
     char sqlcmd[1000];
 
 
@@ -62,8 +59,9 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
 
         
     #if (DEBUG > 0)
-
-        // fprintf(stderr, "log2db(): check insertion\n");
+    int rows;
+    long int dbnanosec;
+    // fprintf(stderr, "log2db(): check insertion\n");
 
     sprintf(sqlcmd, "SELECT * FROM LogTable where (nanosec = %ld)", nanosec);
 

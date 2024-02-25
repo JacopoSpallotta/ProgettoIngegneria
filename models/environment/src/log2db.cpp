@@ -5,11 +5,7 @@
 void log2db(Con2DB db1, int pid, long int nanosec, int t, int delta){
 
     PGresult *res;
-    int rows, k;
-    long int dbnanosec, nsafters;
-    char datebuf[1000];
     char sqlcmd[1000];
-
 
     sprintf(sqlcmd, "SELECT vid FROM TimeVar where ((pid = %d) AND (varname = \'delta\'))", pid);
     res = db1.ExecSQLtuples(sqlcmd);
@@ -35,7 +31,9 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, int delta){
     #if (DEBUG > 0)
 
         // fprintf(stderr, "log2db(): check insertion\n");
-
+    int rows;
+    long int dbnanosec;
+    
     sprintf(sqlcmd, "SELECT * FROM LogTable where (nanosec = %ld)", nanosec);
 
     res = db1.ExecSQLtuples(sqlcmd);
