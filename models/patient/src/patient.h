@@ -42,6 +42,7 @@ const double Cpb = 200;
 const double F = 0.9;
 
 const double T = 0.1;
+const double dose = 105;
 
 struct glucose_kinetics_old{
     double G_p;

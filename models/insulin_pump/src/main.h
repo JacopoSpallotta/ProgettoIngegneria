@@ -24,7 +24,7 @@
 #define TEST_TIME 10
 #define TARGET_GLUCOSE 100
 #define MINDOSE 1
-#define MINUTES_PER_DAY 1640
+#define MINUTES_PER_DAY 1440
 
 insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, int curr_t, int* read_counter);
 long get_curr_nsecs();

@@ -163,10 +163,10 @@ int main(int argc, char *argv[]) {
         double G_t_new = G_t(gluc_kin,gluc_util);
         double G_new = G(gluc_kin);
 
-        double Qsto1_new = Q_sto_1(105, delta,rate_gluc);
-        double Qsto2_new = Q_sto_2(105, rate_gluc);
+        double Qsto1_new = Q_sto_1(dose, delta,rate_gluc);
+        double Qsto2_new = Q_sto_2(dose, rate_gluc);
         double Qsto_new = Q_sto(rate_gluc);
-        double Qgut_new = Q_gut(105, rate_gluc);
+        double Qgut_new = Q_gut(dose, rate_gluc);
         double Ra_meal_new = Ra_meal(weight, rate_gluc);
 
         if ((t % TEST_TIME) == 0){
