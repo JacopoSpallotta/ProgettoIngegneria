@@ -177,10 +177,10 @@ int main(int argc, char *argv[]) {
         }
         if( (t % TEST_TIME) == 1){
             reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", READ_STREAM);
-            char *dose = new char[64];
-            ReadStreamMsgVal(reply,0,0,1, dose);
+            char *comp_dose = new char[64];
+            ReadStreamMsgVal(reply,0,0,1, comp_dose);
 
-            u = stod(dose);
+            u = stod(comp_dose);
             cout<<"T: "<<t<<" Glucose: "<<G_new<<" Dose received: "<<u<<endl;
             freeReplyObject(reply);
         }
