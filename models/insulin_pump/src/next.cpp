@@ -26,7 +26,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
         cout<<"]\n"<<endl;
 
         if (glucose_level >= HARD_MAX_GLUCOSE){
-            pump.comp_dose = round((glucose_level-TARGET_GLUCOSE)/3);
+            pump.comp_dose = round((glucose_level-TARGET_GLUCOSE)/2);
             pump.prev_prev_glucose = pump.prev_glucose;
             pump.prev_glucose = glucose_level;
             return execution;
@@ -55,7 +55,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
 
         } else if (glucose_level > SAFE_MAX_GLUCOSE){
             if (glucose_level > pump.prev_glucose){
-                pump.comp_dose = round((glucose_level-TARGET_GLUCOSE)/3);
+                pump.comp_dose = round((glucose_level-TARGET_GLUCOSE)/2);
 
                 if(pump.comp_dose <= 0){
                     pump.comp_dose = MINDOSE;

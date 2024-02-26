@@ -49,5 +49,6 @@ CREATE TABLE IF NOT EXISTS LogTable (
 
 CREATE TABLE IF NOT EXISTS MonitorTable (
         id serial PRIMARY KEY,			
-        value int NOT NULL
+        safety boolean,
+        liveness boolean
 );

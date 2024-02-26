@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     glucose_kinetics_old gluc_kin = {Gpb,Gtb,Gb};
 
     double Ipb = Ib*Vi; 
-    //double HEb = max((SRb-m4*Ipb)/(SRb+m2*Ipb), 0.0); 
+    //double HEb = max((SRb-m4*Ipb)/(SRb+m2*Ipb), 0.0);
     double HEb = 0.51;
     double m3_0 = (HEb*m1)/(1-HEb);
     //double Ilb = (Ipb*m2+SRb)/(m1+m3_0);
@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
     cpeptide_kinetics_old cpep_kin = {Cpb,cp2b};
 
     double isr_b = Cpb*Vc*k01;
-    cout<<isr_b<<endl;
     insulin_cpeptide_old ins_cpep = {isr_b,0,0}; 
     
     // where the output of the insulin pump will be stored

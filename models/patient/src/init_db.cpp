@@ -9,7 +9,7 @@ void init_logdb(Con2DB db1, int pid) {
  /*  init  */
     
     // Delete tables from prevoius runs, this process HAS TO start FIRST
-    sprintf(sqlcmd, "TRUNCATE LogTable,TimeVar RESTART IDENTITY;"); 
+    sprintf(sqlcmd, "TRUNCATE LogTable,TimeVar,MonitorTable RESTART IDENTITY;"); 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
  
