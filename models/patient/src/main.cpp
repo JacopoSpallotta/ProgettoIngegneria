@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
             ReadStreamMsgVal(reply,0,0,1, comp_dose);
 
             u = stod(comp_dose);
-            cout<<"T: "<<t<<" Glucose: "<<G_new<<" Dose received: "<<u<<endl;
+            //cout<<"T: "<<t<<" Glucose: "<<G_new<<" Dose received: "<<u<<endl;
             freeReplyObject(reply);
         }
         

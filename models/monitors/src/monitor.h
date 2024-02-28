@@ -11,7 +11,7 @@
 
 void monitor_safety(Con2DB* db, struct m_safety* m_safety);
 void monitor_liveness(Con2DB* db,  struct m_liveness* m_liveness);
-void monitor_minimalDose(Con2DB* db,  struct m_minDose* m_minDose)
+void monitor_minimalDose(Con2DB* db,  struct m_minDose* m_minDose);
 
 struct m_safety{
     int tuples_read;
@@ -24,6 +24,7 @@ struct m_liveness{
 
 struct m_minDose{
     int tuples_read;
+    int daily_dose;
 };
 
 using namespace std;

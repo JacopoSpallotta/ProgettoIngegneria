@@ -7,7 +7,10 @@ GRANT ALL PRIVILEGES ON DATABASE :dbname to :username ;
 
 ALTER TABLE TimeVar OWNER TO :username ;
 ALTER TABLE LogTable OWNER TO :username ;
-ALTER TABLE MonitorTable OWNER TO :username ;
+ALTER TABLE SafetyTable OWNER TO :username ;
+ALTER TABLE LivenessTable OWNER TO :username ;
+ALTER TABLE MinimalDose OWNER TO :username ;
+
 
 -- grant all privileges on all tables in schema public to :username ;
 -- grant all privileges on all sequences in schema public to :username ;

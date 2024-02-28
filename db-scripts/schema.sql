@@ -47,8 +47,17 @@ CREATE TABLE IF NOT EXISTS LogTable (
         CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
 );
 
-CREATE TABLE IF NOT EXISTS MonitorTable (
-        id serial PRIMARY KEY,			
-        safety boolean,
+CREATE TABLE IF NOT EXISTS SafetyTable (
+        t int PRIMARY KEY,			
+        safety boolean
+);
+
+CREATE TABLE IF NOT EXISTS LivenessTable (
+        t int PRIMARY KEY,			
         liveness boolean
+);
+
+CREATE TABLE IF NOT EXISTS MinimalDose (
+        t int PRIMARY KEY,			
+        min_dose int
 );

@@ -14,23 +14,14 @@ void monitor_safety(Con2DB* db, struct m_safety* m_safety){
         PQclear(res);
         (m_safety -> tuples_read)++;
 
-        sprintf(sqlcmd, "BEGIN"); 
-        res = (*db).ExecSQLcmd(sqlcmd);
-        PQclear(res);
-
         if(gluc_val < 50){
-            sprintf(sqlcmd, "INSERT INTO MonitorTable(safety) VALUES (%s) ON CONFLICT DO NOTHING", "TRUE");
+            sprintf(sqlcmd, "INSERT INTO SafetyTable(t,safety) VALUES (%d,%s) ON CONFLICT DO NOTHING", m_safety -> tuples_read ,"TRUE");
         }else{
-            sprintf(sqlcmd, "INSERT INTO MonitorTable(safety) VALUES (%s) ON CONFLICT DO NOTHING", "FALSE");
+            sprintf(sqlcmd, "INSERT INTO SafetyTable(t,safety) VALUES (%d,%s) ON CONFLICT DO NOTHING", m_safety -> tuples_read ,"FALSE");
         }
 
         res = (*db).ExecSQLcmd(sqlcmd);
         PQclear(res);
-
-        sprintf(sqlcmd, "COMMIT"); 
-        res = (*db).ExecSQLcmd(sqlcmd);
-        PQclear(res);
-
         
     }
 }
