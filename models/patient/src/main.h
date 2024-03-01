@@ -20,6 +20,7 @@
 #include "glucose_utilization.h"
 #include "init_db.h"
 #include "log2db.h"
+#include "time.h"
 
 #define READ_STREAM "stream1"
 #define WRITE_STREAM "stream2"

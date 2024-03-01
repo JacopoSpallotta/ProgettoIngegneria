@@ -37,11 +37,10 @@ const double Heb = 0.51;
 const double SRb = 737.5;
 const double r1 = 0.7419;
 const double r2 = 0.0807;
-const double Fcns = 1;
+const double Fcns = 10;
 const double Cpb = 200;
 const double F = 0.9;
 
-const double T = 0.1;
 const double dose = 105;
 
 struct glucose_kinetics_old{

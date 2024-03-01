@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Only four arguments required, more where given:\n\tusage: main sex:bool, age:int, weight:int, height:int");
         return -1;
     }
+
+    struct time* time_p = init_time();
     
     /*int ciao = 0;
     printf("%d\n",pid);
@@ -123,11 +125,10 @@ int main(int argc, char *argv[]) {
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
     init_logdb(db, pid);
     
-    int t = 0;
     long nseconds = 0;
-    log2db(db, pid, nseconds, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
+    log2db(db, pid, nseconds, get_time(time_p), gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
 
-    while (t <= 2*MINUTES_PER_DAY){
+    while (get_time() <= MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
         char* delta_str = new char[64];
@@ -193,10 +194,10 @@ int main(int argc, char *argv[]) {
         cpep_kin = {cp_1_new,cp_2_new};
         ins_cpep = {isr_new, isr_s_new, isr_d_new};
 
-        t++;
+        t += T;
         log2db(db, pid, nseconds_diff, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
 
-        usleep(10000);
+        usleep(10000*T);
     }  // while ()
     
     redisFree(c2r);
@@ -207,5 +208,7 @@ long get_curr_nsecs(){
     timespec_get(&ts, TIME_UTC);
     return ( (long) (ts.tv_sec * 1000000000L + ts.tv_nsec));
 }
+
+
 
 

@@ -17,10 +17,10 @@ void monitor_minimalDose(Con2DB* db, struct m_minDose* m_minDose){
         m_minDose -> daily_dose += comp_dose;
         m_minDose -> tuples_read++;
 
-        cout <<comp_dose<<endl;
+        //cout <<comp_dose<<endl;
         if ((m_minDose -> tuples_read % 1440) == 0){ // writes once a day
             sprintf(sqlcmd, "INSERT INTO MinimalDose(t, min_dose) VALUES (%d, %d) ON CONFLICT DO NOTHING", m_minDose -> tuples_read, m_minDose -> daily_dose);
-            cout <<m_minDose->daily_dose<<endl;
+            //cout <<m_minDose->daily_dose<<endl;
 
             m_minDose -> daily_dose = 0;
             res = (*db).ExecSQLcmd(sqlcmd);
