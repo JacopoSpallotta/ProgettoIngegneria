@@ -4,7 +4,7 @@ import os
 
 
 def plot_glucose(d: str):
-    #EXPECTED .csv formatted insulin_value, time
+    # EXPECTED .csv formatted insulin_value,time
     g = []
     t = []
     with open(d, "r") as f:
@@ -12,7 +12,7 @@ def plot_glucose(d: str):
             line = f.readline().rstrip("\n")
             line = line.split(",")
             print(line)
-            g += [int(line[0])] #should be float
+            g += [int(line[0])] # should be float
             t += [int(line[1])]
 
     pypl.plot(g,t)
