@@ -8,28 +8,29 @@ def plot_glucose(d: str):
     g = []
     t = []
     with open(d, "r") as f:
-        for i in f:
+        for li in f:
             line = f.readline().rstrip("\n")
-            line = line.split(",")
-            print(line)
-            g += [int(line[0])] # should be float
-            t += [int(line[1])]
+            if line != "":
+                line = line.split(",")
+                g += [int(line[0])]  # should be float
+                t += [int(line[1])]
 
-    pypl.plot(g,t)
+    pypl.plot(g, t)
+    pypl.title("glucose evolution")
     pypl.xlabel("t(s)")
     pypl.ylabel("glucose(mg/dL)")
-    pypl.title("glucose evolution")
     pypl.show()
 
     return
 
 
 if __name__ == '__main__':
+    l1 = [_ for _ in range(0, 101)]
+    l2 = [_ for _ in range(100, 201)]
 
     with open(os.getcwd()+"/demofile.txt", "w") as wr:
-        for i in range(100):
-            s = "" + str(rdm.randint(1, 10)) + "," + str(rdm.randint(11,20)) + "\n"
+        for i in range(len(l1)):
+            s = "" + str(l1[i]) + "," + str(l2[i]) + "\n"
             wr.write(s)
 
     plot_glucose(os.getcwd()+"/demofile.txt")
-
