@@ -2,6 +2,7 @@
 #define glucose_kinetics
 
 #include "patient.h"
+#include "main.h"
 
 using namespace std;
 

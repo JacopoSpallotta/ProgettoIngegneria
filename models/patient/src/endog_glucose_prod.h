@@ -2,6 +2,7 @@
 #define endog_glucose_prod
 
 #include "patient.h"
+#include "main.h"
 
 using namespace std;
 

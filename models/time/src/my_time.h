@@ -8,15 +8,13 @@
 
 const double T = 0.1;
 
-char* time_db(struct time* curr_time);
+void time_db(struct time* curr_time, char* time_str);
 
 void update_time(struct time* curr_time);
 
 double get_time(struct time* curr_time);
 
 bool check_time(struct time* curr_time, int min);
-
-struct time* init_time();
 
 struct time {
     double minutes;

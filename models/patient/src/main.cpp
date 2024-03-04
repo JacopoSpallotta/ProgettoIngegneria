@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    struct time* time_p = init_time();
+    struct time* time_p = {0};
     
     /*int ciao = 0;
     printf("%d\n",pid);
@@ -104,11 +104,11 @@ int main(int argc, char *argv[]) {
     printf("main(): pid %d: user patient: connected to redis\n", pid);
 
     // Delete streams if exists
-    reply = RedisCommand(c2r, "DEL %s", READ_STREAM);
+    reply = RedisCommand(c2r, "DEL %s", PUMP_TO_PATIENT);
     assertReply(c2r, reply);
     dumpReply(reply, 0);
 
-    reply = RedisCommand(c2r, "DEL %s", WRITE_STREAM);
+    reply = RedisCommand(c2r, "DEL %s", PATIENT_TO_PUMP);
     assertReply(c2r, reply);
     dumpReply(reply, 0);
 
@@ -116,19 +116,27 @@ int main(int argc, char *argv[]) {
     assertReply(c2r, reply);
     dumpReply(reply, 0);
 
+    reply = RedisCommand(c2r, "DEL %s", DUMMY_ENV_STREAM);
+    assertReply(c2r, reply);
+    dumpReply(reply, 0);
+
     /* Create streams/groups */
-    initStreams(c2r, READ_STREAM);
-    initStreams(c2r, WRITE_STREAM);
+    initStreams(c2r, PUMP_TO_PATIENT);
+    initStreams(c2r, PATIENT_TO_PUMP);
     initStreams(c2r, ENV_STREAM);
+    initStreams(c2r, DUMMY_ENV_STREAM);
+
 
     // Create and connect to database
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
     init_logdb(db, pid);
     
     long nseconds = 0;
-    log2db(db, pid, nseconds, get_time(time_p), gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
+    char time_str[13];
+    time_db(time_p, &time_str[0]);
+    log2db(db, pid, nseconds, time_str, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
 
-    while (get_time() <= MINUTES_PER_DAY){
+    while (get_time(time_p) <= MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", ENV_STREAM);
         char* delta_str = new char[64];
@@ -169,14 +177,14 @@ int main(int argc, char *argv[]) {
         double Qgut_new = Q_gut(dose, rate_gluc);
         double Ra_meal_new = Ra_meal(weight, rate_gluc);
 
-        if ((t % TEST_TIME) == 0){
+        if (check_time(time_p,TEST_TIME)){
 
-            reply = RedisCommand(c2r, "XADD %s * %s %.2f", WRITE_STREAM, "glucose", G_new);
+            reply = RedisCommand(c2r, "XADD %s * %s %.2f", PATIENT_TO_PUMP, "glucose", G_new);
             assertReplyType(c2r, reply, REDIS_REPLY_STRING);
             freeReplyObject(reply);
         }
-        if( (t % TEST_TIME) == 1){
-            reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", READ_STREAM);
+        if(check_time(time_p, TEST_TIME+1)){
+            reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", PUMP_TO_PATIENT);
             char *comp_dose = new char[64];
             ReadStreamMsgVal(reply,0,0,1, comp_dose);
 
@@ -194,8 +202,13 @@ int main(int argc, char *argv[]) {
         cpep_kin = {cp_1_new,cp_2_new};
         ins_cpep = {isr_new, isr_s_new, isr_d_new};
 
-        t += T;
-        log2db(db, pid, nseconds_diff, t, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
+        update_time(time_p);
+        time_db(time_p, &time_str[0]);
+        log2db(db, pid, nseconds_diff, time_str, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
+        
+        // dummy comms to syncronize environment
+        reply = RedisCommand(c2r, "XADD %s", DUMMY_ENV_STREAM, "ok");
+        freeReplyObject(reply);
 
         usleep(10000*T);
     }  // while ()

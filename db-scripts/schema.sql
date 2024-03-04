@@ -42,22 +42,22 @@ CREATE TABLE IF NOT EXISTS LogTable (
     vid int NOT NULL,			-- variable id
     varvalue VarType,                       -- variable value
     loginfo String4Info,                    -- extra info
-    t int NOT NULL,
+    t time(3) NOT NULL,
     PRIMARY KEY (nanosec, vid),
     CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
 );
 
 CREATE TABLE IF NOT EXISTS SafetyTable (
-    t int PRIMARY KEY,
+    t time (3) PRIMARY KEY,
     safety boolean
 );
 
 CREATE TABLE IF NOT EXISTS LivenessTable (
-    t int PRIMARY KEY,
+    t time (3) PRIMARY KEY,
     liveness boolean
 );
 
 CREATE TABLE IF NOT EXISTS MinimalDose (
-    t int PRIMARY KEY,
+    t time (3) PRIMARY KEY,
     min_dose int
 );

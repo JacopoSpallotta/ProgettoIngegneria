@@ -1,10 +1,10 @@
 #include "main.h"
 using namespace std;
 
-insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *read_counter){
+insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, double curr_t, int *read_counter, struct time* time_p){
 
     if (pump.state == test){
-        redisReply *reply = RedisCommand(c2r, "XREADGROUP GROUP diameter insulin_pump COUNT 1 BLOCK 1000000000 NOACK STREAMS %s >", READ_STREAM);
+        redisReply *reply = RedisCommand(c2r, "XREADGROUP GROUP diameter insulin_pump COUNT 1 BLOCK 1000000000 NOACK STREAMS %s >", PATIENT_TO_PUMP);
         
         char *gluc = new char[64];
         ReadStreamMsgVal(reply,0,0,1,gluc);
@@ -15,7 +15,6 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
 
         double curr_delta = glucose_level - pump.prev_glucose;
         double old_delta = pump.prev_glucose - pump.prev_prev_glucose;
-        pump.t_old = curr_t;
         cout<<"T: "<<curr_t<<"["<<endl;
         cout<<"\tCurr_delta: "<<curr_delta<<endl;
         cout<<"\tOld_delta: "<<old_delta<<endl;
@@ -85,7 +84,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
         
     }
     if(pump.state == idle){
-        if( (curr_t - pump.t_old) >= TEST_TIME - 1){
+        if( check_time(time_p, TEST_TIME)){
             return test;
         }
         return idle;
@@ -93,7 +92,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, int curr_t, int *
     if(pump.state == execution){
         cout<<"Dose: "<<pump.comp_dose<<endl;
         pump.sum_insulin += pump.comp_dose;
-        redisReply *reply = RedisCommand(c2r, "XADD %s * %s %f", WRITE_STREAM, "dose", pump.comp_dose);
+        redisReply *reply = RedisCommand(c2r, "XADD %s * %s %f", PUMP_TO_PATIENT, "dose", pump.comp_dose);
         assertReplyType(c2r, reply, REDIS_REPLY_STRING);
         freeReplyObject(reply);
         return idle;

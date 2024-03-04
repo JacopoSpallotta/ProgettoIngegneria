@@ -20,11 +20,12 @@
 #include "glucose_utilization.h"
 #include "init_db.h"
 #include "log2db.h"
-#include "time.h"
+#include "my_time.h"
 
-#define READ_STREAM "stream1"
-#define WRITE_STREAM "stream2"
+#define PUMP_TO_PATIENT "stream1"
+#define PATIENT_TO_PUMP "stream2"
 #define ENV_STREAM "stream3"
+#define DUMMY_ENV_STREAM "stream4"
 #define DEBUG 0
 #define TEST_TIME 10
 #define MINUTES_PER_DAY 1440

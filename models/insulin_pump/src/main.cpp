@@ -10,6 +10,8 @@ int main() {
     int read_counter = 0;
     int pid = getpid();
     unsigned seed;
+
+    struct time* time_p = {0};
     /*
     printf("%d\n",pid);
     int ciao = 0;
@@ -35,17 +37,17 @@ int main() {
     printf("main(): pid %d: user insulin_pump: connected to redis\n", pid);
 
     // Delete streams if exists
-    reply = RedisCommand(c2r, "DEL %s", READ_STREAM);
+    reply = RedisCommand(c2r, "DEL %s", PATIENT_TO_PUMP);
     assertReply(c2r, reply);
     dumpReply(reply, 0);
 
-    reply = RedisCommand(c2r, "DEL %s", WRITE_STREAM);
+    reply = RedisCommand(c2r, "DEL %s", PUMP_TO_PATIENT);
     assertReply(c2r, reply);
     dumpReply(reply, 0);
 
     /* Create streams/groups */
-    initStreams(c2r, READ_STREAM);
-    initStreams(c2r, WRITE_STREAM);
+    initStreams(c2r, PATIENT_TO_PUMP);
+    initStreams(c2r, PUMP_TO_PATIENT);
 
     // Create and connect to database
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
@@ -53,20 +55,20 @@ int main() {
 
     long nseconds = 0;
     
-    int t = 0;
-    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0,0};
-    log2db(db, pid, nseconds, t, pump.state, pump.comp_dose);
+    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0};
+    char time_str[13];
+    time_db(time_p, &time_str[0]);
+    log2db(db, pid, nseconds, time_str, pump.state, pump.comp_dose);
 
-    while (t <= 2*MINUTES_PER_DAY){
+    while (get_time(time_p) <= 2*MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        insulin_pump_state next_state = next(pump, c2r, t, &read_counter);
+        insulin_pump_state next_state = next(pump, c2r, get_time(time_p), &read_counter, time_p);
         pump.state = next_state;
         
-        t++;
-
-        log2db(db, pid, nseconds_diff, t, pump.state, pump.comp_dose);
-        usleep(10000);
-
+        update_time(time_p);
+        time_db(time_p, &time_str[0]);
+        log2db(db, pid, nseconds_diff, time_str, pump.state, pump.comp_dose);
+        usleep(10000*T);
     }  // while ()
     
     redisFree(c2r);

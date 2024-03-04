@@ -2,7 +2,7 @@
 
 /* buy stock  */
 
-void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pump_state, double comp_dose){
+void log2db(Con2DB db1, int pid, long int nanosec, char* t, insulin_pump_state pump_state, double comp_dose){
 
     PGresult *res;
     char sqlcmd[1000];
@@ -41,13 +41,13 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, insulin_pump_state pum
     PQclear(res);
 
         
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %d, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_state, pump_state, pump_state_str,t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %d, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_state, pump_state, pump_state_str,t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_comp_dose, comp_dose, "Computed dose",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_comp_dose, comp_dose, "Computed dose",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);

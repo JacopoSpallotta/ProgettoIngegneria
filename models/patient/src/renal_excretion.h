@@ -2,6 +2,7 @@
 #define renal_excretion
 
 #include "patient.h"
+#include "main.h"
 
 using namespace std;
 

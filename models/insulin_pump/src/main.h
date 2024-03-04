@@ -13,9 +13,10 @@
 #include "insulin_pump.h"
 #include "log2db.h"
 #include "init_db.h"
+#include "my_time.h"
 
-#define READ_STREAM "stream2"
-#define WRITE_STREAM "stream1"
+#define PATIENT_TO_PUMP "stream2"
+#define PUMP_TO_PATIENT "stream1"
 #define DEBUG 0
 #define SAFE_MIN_GLUCOSE 90
 #define HARD_MIN_GLUCOSE 50
@@ -26,6 +27,6 @@
 #define MINDOSE 1
 #define MINUTES_PER_DAY 1440
 
-insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, int curr_t, int* read_counter);
+insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, double curr_t, int* read_counter, struct time*);
 long get_curr_nsecs();
 #endif

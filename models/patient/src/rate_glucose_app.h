@@ -2,7 +2,7 @@
 #define rate_glucose_app
 
 #include "patient.h"
-#include <cmath>
+#include "main.h"
 
 using namespace std;
 

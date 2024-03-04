@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd models
+
 make
 
 cd patient/bin
@@ -8,9 +10,6 @@ cd patient/bin
 sleep 1
 
 cd ../../insulin_pump/bin
-./main &
-
-cd ../../monitors/bin
 ./main &
 
 cd ../../environment/bin

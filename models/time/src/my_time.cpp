@@ -1,4 +1,4 @@
-#include "time.h"
+#include "my_time.h"
 
 void update_time(struct time* curr_time){
     curr_time -> minutes += T;
@@ -16,7 +16,7 @@ bool check_time(struct time* curr_time, int min){
     return false;
 }
 
-char* time_db(struct time* curr_time){
+void time_db(struct time* curr_time, char* time_str){
     tm t{};
     double minutes;
     double decimal = modf(curr_time -> minutes, &minutes);
@@ -29,16 +29,9 @@ char* time_db(struct time* curr_time){
     t.tm_sec = seconds;
     int milliseconds = milliseconds_temp - (seconds*1000);
 
-    char milli_str[4];
+    char milli_str[5];
     sprintf(milli_str, ".%d",milliseconds);
 
-    char time_str[13];
     strftime(time_str, 9, "%H:%M:%S", &t);
     strcat(time_str, milli_str);
-    return &time_str[0];
-}
-
-struct time* init_time(){
-    struct time time = {0};
-    return &time;
 }

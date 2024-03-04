@@ -2,7 +2,7 @@
 #define glucose_utilization
 
 #include "patient.h"
-#include <cmath>
+#include "main.h"
 
 using namespace std;
 

@@ -1,6 +1,6 @@
 #include "log2db.h"
 
-void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, double Qsto, double EGP, double Uid, double E, double ISR){
+void log2db(Con2DB db1, int pid, long int nanosec, char* t, double G, double I, double Qsto, double EGP, double Uid, double E, double ISR){
 
     PGresult *res;
     char sqlcmd[1000];
@@ -45,43 +45,43 @@ void log2db(Con2DB db1, int pid, long int nanosec, int t, double G, double I, do
     PQclear(res);
 
         
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_G, G, "Glucose value",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_G, G, "Glucose value",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_I, I, "Insulin value",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_I, I, "Insulin value",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_EGP, EGP, "Endogenous glucose prod",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_EGP, EGP, "Endogenous glucose prod",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_Qsto, Qsto, "Glucose in stomach",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_Qsto, Qsto, "Glucose in stomach",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_Uid, Uid, "Insulin utilization",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_Uid, Uid, "Insulin utilization",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_E, E, "Renal excretion",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_E, E, "Renal excretion",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', %d) ON CONFLICT DO NOTHING", nanosec, vid_ISR, ISR, "Insulin secretion",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_ISR, ISR, "Insulin secretion",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);

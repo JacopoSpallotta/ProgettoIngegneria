@@ -2,7 +2,7 @@
 #define insulin_cpeptide
 
 #include "patient.h"
-#include "glucose_kinetics.h"
+#include "main.h"
 
 using namespace std;
 
