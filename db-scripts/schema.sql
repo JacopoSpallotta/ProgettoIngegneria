@@ -25,12 +25,12 @@ CREATE TYPE DomainType AS ENUM ('discrete', 'real', 'double');
 -- Patient data that depend on time
 -- Variables within time series (all have the same type)
 CREATE TABLE IF NOT EXISTS TimeVar (
-        vid serial PRIMARY KEY,     -- serial id for variable
-        pid int NOT NULL,           -- pid of process logged
-        sysname String4Info,        --- system containing logged variable
-        varname String4VarName NOT NULL,     -- variable name
-        vardomain DomainType NOT NULL,
-        varinfo String4Info NOT NULL
+    vid serial PRIMARY KEY,     -- serial id for variable
+    pid int NOT NULL,           -- pid of process logged
+    sysname String4Info,        --- system containing logged variable
+    varname String4VarName NOT NULL,     -- variable name
+    vardomain DomainType NOT NULL,
+    varinfo String4Info NOT NULL
 );
 
 -- Timescaledb extension for time series
@@ -38,26 +38,26 @@ CREATE TABLE IF NOT EXISTS TimeVar (
 -- CREATE EXTENSION timescaledb;
 
 CREATE TABLE IF NOT EXISTS LogTable (
-        nanosec bigint NOT NULL,		-- nanseconds after second
-        vid int NOT NULL,			-- variable id
-        varvalue VarType,                       -- variable value
-	loginfo String4Info,                    -- extra info
-        t int NOT NULL,
-        PRIMARY KEY (nanosec, vid),
-        CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
+    nanosec bigint NOT NULL,		-- nanseconds after second
+    vid int NOT NULL,			-- variable id
+    varvalue VarType,                       -- variable value
+    loginfo String4Info,                    -- extra info
+    t int NOT NULL,
+    PRIMARY KEY (nanosec, vid),
+    CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
 );
 
 CREATE TABLE IF NOT EXISTS SafetyTable (
-        t int PRIMARY KEY,			
-        safety boolean
+    t int PRIMARY KEY,
+    safety boolean
 );
 
 CREATE TABLE IF NOT EXISTS LivenessTable (
-        t int PRIMARY KEY,			
-        liveness boolean
+    t int PRIMARY KEY,
+    liveness boolean
 );
 
 CREATE TABLE IF NOT EXISTS MinimalDose (
-        t int PRIMARY KEY,			
-        min_dose int
+    t int PRIMARY KEY,
+    min_dose int
 );
