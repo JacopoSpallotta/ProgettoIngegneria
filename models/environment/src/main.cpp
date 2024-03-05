@@ -9,7 +9,7 @@ int main() {
     int pid = getpid();
     unsigned seed;
 
-    struct time* time_p = {0};
+    struct time time_p = {0};
     /*
     printf("%d\n",pid);
     int ciao = 0;
@@ -28,11 +28,11 @@ int main() {
 
     pid = getpid();
 
-    printf("main(): pid %d: user insulin_pump: connecting to redis ...\n", pid);
+    printf("main(): pid %d: user environment: connecting to redis ...\n", pid);
 
     c2r = redisConnect("localhost", 6379);
 
-    printf("main(): pid %d: user insulin_pump: connected to redis\n", pid);
+    printf("main(): pid %d: user environment: connected to redis\n", pid);
 
     // Delete streams if exists
 
@@ -56,12 +56,12 @@ int main() {
     
     int delta = 0;
     char time_str[13];
-    time_db(time_p, &time_str[0]);
+    time_db(&time_p, &time_str[0]);
     log2db(db, pid, nseconds, time_str, delta);
 
-    while (get_time(time_p) <= 2*MINUTES_PER_DAY){
+    while (get_time(&time_p) <= 2*MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        int minute = floor(get_time(time_p));
+        int minute = floor(get_time(&time_p));
         if( (minute % (MEAL_DURATION+FASTING_DURATION) >= 0) && (minute % (MEAL_DURATION+FASTING_DURATION) < MEAL_DURATION)){
             delta = 1;
         }else{
@@ -72,8 +72,8 @@ int main() {
         assertReplyType(c2r, reply, REDIS_REPLY_STRING);
         freeReplyObject(reply);
 
-        update_time(time_p);
-        time_db(time_p, &time_str[0]);
+        update_time(&time_p);
+        time_db(&time_p, time_str);
         log2db(db, pid, nseconds_diff, time_str, delta);
 
         // dummy comms with patient to synchronize patient and environment

@@ -11,7 +11,7 @@ int main() {
     int pid = getpid();
     unsigned seed;
 
-    struct time* time_p = {0};
+    struct time time_p = {0};
     /*
     printf("%d\n",pid);
     int ciao = 0;
@@ -57,16 +57,16 @@ int main() {
     
     Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0};
     char time_str[13];
-    time_db(time_p, &time_str[0]);
+    time_db(&time_p, &time_str[0]);
     log2db(db, pid, nseconds, time_str, pump.state, pump.comp_dose);
 
-    while (get_time(time_p) <= 2*MINUTES_PER_DAY){
+    while (get_time(&time_p) <= 2*MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        insulin_pump_state next_state = next(pump, c2r, get_time(time_p), &read_counter, time_p);
+        insulin_pump_state next_state = next(pump, c2r, get_time(&time_p), &read_counter, &time_p);
         pump.state = next_state;
         
-        update_time(time_p);
-        time_db(time_p, &time_str[0]);
+        update_time(&time_p);
+        time_db(&time_p, &time_str[0]);
         log2db(db, pid, nseconds_diff, time_str, pump.state, pump.comp_dose);
         usleep(10000*T);
     }  // while ()

@@ -7,17 +7,14 @@ void log2db(Con2DB db1, int pid, long int nanosec, char* t, insulin_pump_state p
     PGresult *res;
     char sqlcmd[1000];
 
-
     sprintf(sqlcmd, "SELECT vid FROM TimeVar where ((pid = %d) AND (varname = \'pump_state\'))", pid);
     res = db1.ExecSQLtuples(sqlcmd);
     int vid_state = atoi(PQgetvalue(res, 0, PQfnumber(res, "vid")));
     PQclear(res);
-
     sprintf(sqlcmd, "SELECT vid FROM TimeVar where ((pid = %d) AND (varname = \'comp_dose\'))", pid);
     res = db1.ExecSQLtuples(sqlcmd);
     int vid_comp_dose = atoi(PQgetvalue(res, 0, PQfnumber(res, "vid")));
     PQclear(res);
-
     char pump_state_str[30];
 
     switch (pump_state)
@@ -41,13 +38,13 @@ void log2db(Con2DB db1, int pid, long int nanosec, char* t, insulin_pump_state p
     PQclear(res);
 
         
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %d, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_state, pump_state, pump_state_str,t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %d, \'%s\', interval (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_state, pump_state, pump_state_str,t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);
 
 
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_comp_dose, comp_dose, "Computed dose",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %f, \'%s\', interval (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid_comp_dose, comp_dose, "Computed dose",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);

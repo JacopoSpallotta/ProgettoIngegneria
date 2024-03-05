@@ -17,7 +17,7 @@ void log2db(Con2DB db1, int pid, long int nanosec, char* t, int delta){
     PQclear(res);
 
         
-    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %d, \'%s\', time (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid, delta, "Food intake",t);
+    sprintf(sqlcmd, "INSERT INTO LogTable VALUES (%ld, %d, %d, \'%s\', interval (3) \'%s\') ON CONFLICT DO NOTHING", nanosec, vid, delta, "Food intake",t);
 
     res = db1.ExecSQLcmd(sqlcmd);
     PQclear(res);

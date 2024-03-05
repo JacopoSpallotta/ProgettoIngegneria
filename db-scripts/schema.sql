@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS LogTable (
     vid int NOT NULL,			-- variable id
     varvalue VarType,                       -- variable value
     loginfo String4Info,                    -- extra info
-    t time(3) NOT NULL,
+    t interval HOUR TO SECOND (3) NOT NULL,
     PRIMARY KEY (nanosec, vid),
     CONSTRAINT vid_ref FOREIGN KEY(vid) REFERENCES TimeVar(vid)
 );

@@ -84,7 +84,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, double curr_t, in
         
     }
     if(pump.state == idle){
-        if( check_time(time_p, TEST_TIME)){
+        if( check_time(time_p, TEST_TIME, 0)){
             return test;
         }
         return idle;

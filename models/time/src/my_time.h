@@ -5,6 +5,7 @@
 #include <ctime>
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
 
 const double T = 0.1;
 
@@ -14,7 +15,7 @@ void update_time(struct time* curr_time);
 
 double get_time(struct time* curr_time);
 
-bool check_time(struct time* curr_time, int min);
+bool check_time(struct time* curr_time, int min, int target);
 
 struct time {
     double minutes;
