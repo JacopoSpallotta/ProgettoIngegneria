@@ -5,7 +5,6 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, double curr_t, in
 
     if (pump.state == test){
         redisReply *reply = RedisCommand(c2r, "XREADGROUP GROUP diameter insulin_pump COUNT 1 BLOCK 1000000000 NOACK STREAMS %s >", PATIENT_TO_PUMP);
-        
         char *gluc = new char[64];
         ReadStreamMsgVal(reply,0,0,1,gluc);
         (*read_counter)++;
@@ -32,9 +31,9 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, double curr_t, in
 
         } else if(glucose_level >= SAFE_MIN_GLUCOSE && glucose_level <= SAFE_MAX_GLUCOSE){
             if(glucose_level > pump.prev_glucose && (curr_delta >= old_delta)){
-                pump.comp_dose = round((glucose_level-TARGET_GLUCOSE)/3);
+                pump.comp_dose = round((glucose_level-TARGET_GLUCOSE)/1.5);
 
-                if(pump.comp_dose == 0){
+                if(pump.comp_dose <= 0){
                     pump.comp_dose = MINDOSE;
                 }
                 pump.prev_prev_glucose = pump.prev_glucose;

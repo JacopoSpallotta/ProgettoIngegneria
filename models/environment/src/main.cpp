@@ -10,8 +10,8 @@ int main() {
     unsigned seed;
 
     struct time time_p = {0};
-    /*
-    printf("%d\n",pid);
+    
+   /* printf("%d\n",pid);
     int ciao = 0;
     while(ciao == 0){
         sleep(5);
@@ -59,7 +59,7 @@ int main() {
     time_db(&time_p, &time_str[0]);
     log2db(db, pid, nseconds, time_str, delta);
 
-    while (get_time(&time_p) <= 2*MINUTES_PER_DAY){
+    while (get_time(&time_p) <= MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         int minute = floor(get_time(&time_p));
         if( (minute % (MEAL_DURATION+FASTING_DURATION) >= 0) && (minute % (MEAL_DURATION+FASTING_DURATION) < MEAL_DURATION)){
@@ -80,7 +80,7 @@ int main() {
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter environment COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", DUMMY_ENV_STREAM);
         freeReplyObject(reply);
 
-        usleep(10000*T);
+        usleep(1000*T);
 
     }  // while ()
     

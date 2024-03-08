@@ -12,8 +12,8 @@ int main() {
     unsigned seed;
 
     struct time time_p = {0};
-    /*
-    printf("%d\n",pid);
+    
+    /*printf("%d\n",pid);
     int ciao = 0;
     while(ciao == 0){
         sleep(5);
@@ -60,15 +60,16 @@ int main() {
     time_db(&time_p, &time_str[0]);
     log2db(db, pid, nseconds, time_str, pump.state, pump.comp_dose);
 
-    while (get_time(&time_p) <= 2*MINUTES_PER_DAY){
+    while (get_time(&time_p) <= MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
+        
         insulin_pump_state next_state = next(pump, c2r, get_time(&time_p), &read_counter, &time_p);
         pump.state = next_state;
         
         update_time(&time_p);
         time_db(&time_p, &time_str[0]);
         log2db(db, pid, nseconds_diff, time_str, pump.state, pump.comp_dose);
-        usleep(10000*T);
+        usleep(1000*T);
     }  // while ()
     
     redisFree(c2r);

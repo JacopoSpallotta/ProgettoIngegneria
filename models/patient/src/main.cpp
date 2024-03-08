@@ -207,10 +207,10 @@ int main(int argc, char *argv[]) {
         log2db(db, pid, nseconds_diff, time_str, gluc_kin.G, ins_kin.I, rate_gluc.q_sto, end_gluc.egp, gluc_util.u_id, ren_excr.e, ins_cpep.isr);
         
         // dummy comms to syncronize environment
-        reply = RedisCommand(c2r, "XADD %s", DUMMY_ENV_STREAM, "ok");
+        reply = RedisCommand(c2r, "XADD %s * %s %s", DUMMY_ENV_STREAM, "ok", "ok");
         freeReplyObject(reply);
 
-        usleep(10000*T);
+        usleep(1000*T);
     }  // while ()
     
     redisFree(c2r);
