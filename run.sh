@@ -15,4 +15,7 @@ cd ../../insulin_pump/bin
 cd ../../environment/bin
 ./main &
 
+cd ../../monitors/bin
+./main &
+
 wait

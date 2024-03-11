@@ -48,16 +48,16 @@ CREATE TABLE IF NOT EXISTS LogTable (
 );
 
 CREATE TABLE IF NOT EXISTS SafetyTable (
-    t time (3) PRIMARY KEY,
+    t interval HOUR TO SECOND (3) PRIMARY KEY,
     safety boolean
 );
 
 CREATE TABLE IF NOT EXISTS LivenessTable (
-    t time (3) PRIMARY KEY,
+    t interval HOUR TO SECOND (3) PRIMARY KEY,
     liveness boolean
 );
 
 CREATE TABLE IF NOT EXISTS MinimalDose (
-    t time (3) PRIMARY KEY,
+    t interval HOUR TO SECOND (3) PRIMARY KEY,
     min_dose int
 );

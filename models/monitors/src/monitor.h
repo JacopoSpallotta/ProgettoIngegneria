@@ -6,6 +6,7 @@
 #include <string>
 #include <unistd.h>
 #include <iostream>
+#include "my_time.h"
 
 #define MINUTES_PER_DAY 1440
 

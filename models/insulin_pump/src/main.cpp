@@ -7,7 +7,6 @@ int main() {
     
     redisContext *c2r;
     redisReply *reply;
-    int read_counter = 0;
     int pid = getpid();
     unsigned seed;
 
@@ -55,20 +54,23 @@ int main() {
 
     long nseconds = 0;
     
-    Insulin_Pump pump = {HARD_MIN_GLUCOSE,SAFE_MIN_GLUCOSE,HARD_MAX_GLUCOSE,SAFE_MAX_GLUCOSE,test,0,100,100,0};
+    Insulin_Pump pump = {test,GLUCOSE_INIT,100,100};
     char time_str[13];
     time_db(&time_p, &time_str[0]);
-    log2db(db, pid, nseconds, time_str, pump.state, pump.comp_dose);
+    log2db(db, pid, nseconds, time_str, pump.state, 0);
 
     while (get_time(&time_p) <= MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
-        
-        insulin_pump_state next_state = next(pump, c2r, get_time(&time_p), &read_counter, &time_p);
+        double comp_dose = 0;
+        if(pump.state == execution){
+            comp_dose = compute_dose(pump.prev_prev_glucose, pump.prev_glucose, pump.glucose_level);
+        }
+        insulin_pump_state next_state = next(pump, c2r, get_time(&time_p), &time_p, comp_dose);
         pump.state = next_state;
         
         update_time(&time_p);
         time_db(&time_p, &time_str[0]);
-        log2db(db, pid, nseconds_diff, time_str, pump.state, pump.comp_dose);
+        log2db(db, pid, nseconds_diff, time_str, pump.state, comp_dose);
         usleep(1000*T);
     }  // while ()
     

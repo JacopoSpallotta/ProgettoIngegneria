@@ -24,9 +24,11 @@
 #define HARD_MAX_GLUCOSE 120
 #define TEST_TIME 10
 #define TARGET_GLUCOSE 100
+#define GLUCOSE_INIT 127
 #define MINDOSE 1
 #define MINUTES_PER_DAY 1440
 
-insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, double curr_t, int* read_counter, struct time*);
+insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, double curr_t, struct time*, double comp_dose);
+double compute_dose(double prev_prev_glucose, double prev_glucose, double glucose_level);
 long get_curr_nsecs();
 #endif

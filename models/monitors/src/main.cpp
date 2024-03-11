@@ -1,4 +1,4 @@
-#include <monitor.h>
+#include "monitor.h"
 
 int main(int argc, char* argv[]){
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
@@ -6,10 +6,10 @@ int main(int argc, char* argv[]){
     struct m_liveness m_liveness = {1,0};
     struct m_minDose m_minDose = {1,0};
 
-    while(m_safety.tuples_read <= 2*MINUTES_PER_DAY){
+    while(m_safety.tuples_read <= MINUTES_PER_DAY/T){
         monitor_safety(&db, &m_safety);
         monitor_liveness(&db, &m_liveness);
         monitor_minimalDose(&db, &m_minDose);
-        usleep(5000);
+        usleep(500*T);
     }
 }
