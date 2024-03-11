@@ -61,13 +61,13 @@ double compute_dose(double prev_prev_glucose, double prev_glucose, double glucos
         comp_dose = 9;
     }
 
-    cout<<"\tCurr_delta: "<<curr_delta<<endl;
+    /*cout<<"\tCurr_delta: "<<curr_delta<<endl;
     cout<<"\tOld_delta: "<<old_delta<<endl;
     cout<<"\tGlucose_level: "<<glucose_level<<endl;
     cout<<"\tPrev_glucose: "<<prev_glucose<<endl;
     cout<<"\tPrev_prev_glucose: "<<prev_prev_glucose<<endl;
     cout<<"\tComp dose: "<<comp_dose<<endl;
-    cout<<"]\n"<<endl;
+    cout<<"]\n"<<endl;*/
 
     return comp_dose;
 }

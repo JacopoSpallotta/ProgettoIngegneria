@@ -10,9 +10,9 @@
 
 #define MINUTES_PER_DAY 1440
 
-void monitor_safety(Con2DB* db, struct m_safety* m_safety);
-void monitor_liveness(Con2DB* db,  struct m_liveness* m_liveness);
-void monitor_minimalDose(Con2DB* db,  struct m_minDose* m_minDose);
+void monitor_safety(Con2DB* db, struct m_safety* m_safety, double gluc_val);
+void monitor_liveness(Con2DB* db,  struct m_liveness* m_liveness, double gluc_val);
+void monitor_minimalDose(Con2DB* db,  struct m_minDose* m_minDose, int comp_dose);
 
 struct m_safety{
     int tuples_read;

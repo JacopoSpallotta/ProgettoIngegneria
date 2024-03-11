@@ -210,7 +210,7 @@ int main(int argc, char *argv[]) {
         reply = RedisCommand(c2r, "XADD %s * %s %s", DUMMY_ENV_STREAM, "ok", "ok");
         freeReplyObject(reply);
 
-        usleep(10000*T);
+        usleep(1000*T);
     }  // while ()
     
     redisFree(c2r);

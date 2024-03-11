@@ -80,7 +80,7 @@ int main() {
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter environment COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", DUMMY_ENV_STREAM);
         freeReplyObject(reply);
 
-        usleep(10000*T);
+        usleep(1000*T);
 
     }  // while ()
     
