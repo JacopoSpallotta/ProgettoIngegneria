@@ -16,16 +16,19 @@ void monitor_minimalDose(Con2DB* db,  struct m_minDose* m_minDose);
 
 struct m_safety{
     int tuples_read;
+    struct time time_p;
 };
 
 struct m_liveness{
     int tuples_read;
     double gluc_sum;
+    struct time time_p;
 };
 
 struct m_minDose{
     int tuples_read;
     int daily_dose;
+    struct time time_p;
 };
 
 using namespace std;

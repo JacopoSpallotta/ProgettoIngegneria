@@ -71,7 +71,7 @@ int main() {
         update_time(&time_p);
         time_db(&time_p, &time_str[0]);
         log2db(db, pid, nseconds_diff, time_str, pump.state, comp_dose);
-        usleep(1000*T);
+        usleep(10000*T);
     }  // while ()
     
     redisFree(c2r);
