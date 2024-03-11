@@ -77,6 +77,19 @@ int main() {
     redisFree(c2r);
 }
 
+void dump_csv(int argc, char* argv[], const char* fname){
+    ofstream csvFile;
+    csvFile.open(fname);
+    int i = 0;
+    while (i < argc){
+        csvFile << argv;
+        if (i%2 == 0){
+            csvFile << "\n";
+        }
+    }
+    csvFile.close();
+}
+
 long get_curr_nsecs(){
     struct timespec ts;
     timespec_get(&ts, TIME_UTC);

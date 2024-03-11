@@ -10,6 +10,7 @@
 #include <time.h>
 #include <math.h>
 #include <iostream>
+#include <fstream>
 #include "insulin_pump.h"
 #include "log2db.h"
 #include "init_db.h"
@@ -30,5 +31,6 @@
 
 insulin_pump_state next(Insulin_Pump& pump, redisContext* c2r, double curr_t, struct time*, double comp_dose);
 double compute_dose(double prev_prev_glucose, double prev_glucose, double glucose_level);
+void dump_csv(int argc, char* argv[], const char* fname);
 long get_curr_nsecs();
 #endif
