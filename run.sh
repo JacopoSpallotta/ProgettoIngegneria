@@ -7,7 +7,7 @@ make
 cd patient/bin
 ./main 1 50 100 180 &
 
-sleep 1
+sleep 0.5
 
 cd ../../insulin_pump/bin
 ./main &
@@ -15,7 +15,10 @@ cd ../../insulin_pump/bin
 cd ../../environment/bin
 ./main &
 
-cd ../../monitors/bin
-./main &
+cd ../../../InsulinePumpDisplay
+./insulinePumpDisplay
 
 wait
+
+cd ../models/monitors/bin
+./main

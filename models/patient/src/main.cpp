@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
 
     seed = (unsigned) time(NULL);
     srand(seed);
+
     // redis client connects to server
     printf("main(): pid %d: user patient: connecting to redis ...\n", pid);
     c2r = redisConnect("localhost", 6379);
@@ -126,6 +127,11 @@ int main(int argc, char *argv[]) {
     initStreams(c2r, ENV_STREAM);
     initStreams(c2r, DUMMY_ENV_STREAM);
 
+    // Init streams for display
+    initStreams(c2r, "gluc_displ");
+    initStreams(c2r, "ins_displ");
+    initStreams(c2r, "delta_displ");
+    initStreams(c2r, "time_displ");
 
     // Create and connect to database
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
@@ -182,6 +188,7 @@ int main(int argc, char *argv[]) {
             reply = RedisCommand(c2r, "XADD %s * %s %.2f", PATIENT_TO_PUMP, "glucose", G_new);
             assertReplyType(c2r, reply, REDIS_REPLY_STRING);
             freeReplyObject(reply);
+
         }
         if(check_time(&time_p, TEST_TIME, 1)){
             reply = RedisCommand(c2r, "XREADGROUP GROUP diameter patient COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", PUMP_TO_PATIENT);
@@ -190,6 +197,24 @@ int main(int argc, char *argv[]) {
 
             u = stod(comp_dose);
             //cout<<"T: "<<t<<" Glucose: "<<G_new<<" Dose received: "<<u<<endl;
+            freeReplyObject(reply);
+
+            // Send datas to display
+            
+            reply = RedisCommand(c2r, "XADD %s * %s %.2f", "gluc_displ", "glucose", G_new);
+            assertReplyType(c2r, reply, REDIS_REPLY_STRING);
+            freeReplyObject(reply);
+
+            reply = RedisCommand(c2r, "XADD %s * %s %f", "ins_displ", "dose", u);
+            assertReplyType(c2r, reply, REDIS_REPLY_STRING);
+            freeReplyObject(reply);
+
+            reply = RedisCommand(c2r, "XADD %s * %s %d", "delta_displ", "isEating", delta);
+            assertReplyType(c2r, reply, REDIS_REPLY_STRING);
+            freeReplyObject(reply);
+
+            reply = RedisCommand(c2r, "XADD %s * %s %s", "time_displ", "time_str", time_str);
+            assertReplyType(c2r, reply, REDIS_REPLY_STRING);
             freeReplyObject(reply);
         }
         

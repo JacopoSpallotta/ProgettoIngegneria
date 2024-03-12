@@ -6,8 +6,9 @@ MONITORDIR = monitors/src
 CON2REDISDIR = ../con2redis/src
 CON2DBDIR = ../con2db
 TIMEDIR = time/src
+SCREENDIR = ../InsulinePumpDisplay
 
-SUBDIRS = $(CON2REDISDIR) $(CON2DBDIR) $(TIMEDIR) $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR) $(MONITORDIR) 
+SUBDIRS = $(CON2REDISDIR) $(CON2DBDIR) $(TIMEDIR) $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR) $(MONITORDIR) $(SCREENDIR)
 
 all:
 	@echo ""
@@ -39,6 +40,9 @@ pat:
 
 monitor:
 	@cd $(MONITORDIR) ; $(MAKE)
+
+screen:
+	@cd $(SCREENDIR) ; $(MAKE)
 
 .PHONY: clean
 
