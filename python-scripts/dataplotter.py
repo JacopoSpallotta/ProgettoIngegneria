@@ -3,14 +3,11 @@ import random as rdm
 import os 
 
 
-def plot_glucose(d: str):
+def plot_glucose(fname: str):
     # EXPECTED .csv formatted insulin_value,time
-
-    # TODO: Tag per il tipo di dato da plottare
-    #   ES:   glucose, insulin_dose, both
     d = []
     t = []
-    with open(d, "r") as f:
+    with open(fname, "r") as f:
         for li in f:
             line = f.readline().rstrip("\n")
             if line != "":
@@ -18,12 +15,17 @@ def plot_glucose(d: str):
                 d += [int(line[0])]  # should be float
                 t += [int(line[1])]
 
-    pypl.plot(d, t)
-    pypl.title("dlucose evolution")
-    pypl.xlabel("t(s)")
-    pypl.ylabel("dlucose(mg/dL)")
-    pypl.show()
+    if "glucose" in fname:
+        pypl.title("glucose evolution")
+        pypl.ylabel("glucose(mg/dL)")
 
+    elif "insulin" in fname:
+        pypl.title("insulin evolution")
+        pypl.ylabel("insulin(mg/dL)")
+
+    pypl.plot(d, t)
+    pypl.xlabel("t(s)")
+    pypl.show()
     return
 
 
