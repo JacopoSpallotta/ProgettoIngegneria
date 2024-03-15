@@ -182,7 +182,7 @@ int main(int argc, char *argv[]) {
 
         double G_p_new = G_p(gluc_kin,end_gluc,rate_gluc,gluc_util,ren_excr);
         double G_t_new = G_t(gluc_kin,gluc_util);
-        char *G_new = G(gluc_kin);
+        double G_new = G(gluc_kin);
 
         double Qsto1_new = Q_sto_1(dose, delta,rate_gluc);
         double Qsto2_new = Q_sto_2(dose, rate_gluc);
@@ -241,14 +241,17 @@ int main(int argc, char *argv[]) {
         // dummy comms to syncronize environment
         reply = RedisCommand(c2r, "XADD %s * %s %s", DUMMY_ENV_STREAM, "ok", "ok");
         freeReplyObject(reply);
+
         // LOGGING INTO .CSV
         if (csv_g.is_open() && csv_i.is_open()){
             // glucose
-            csv_g << G_new << "," <<  time_str << "\n" << endl;
+            char g_str[10];
+            sprintf(g_str, "%.2f", G_new); // string cast from double
+            csv_g << g_str << "," <<  time_str << "\n";
             // insulin
-            char u_str[10 + sizeof(char)];
-            std::sprintf(u_str, "%.2f", u); // string cast from double
-            csv_i << u << "," <<  time_str << "\n" << endl;
+            char u_str[10];
+            sprintf(u_str, "%.2f", u); // string cast from double
+            csv_i << u_str << "," <<  time_str << "\n";
         }
         //
         usleep(1000*T);

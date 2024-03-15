@@ -1,6 +1,10 @@
 #include <gtkmm.h>
 #include <iostream>
 #include <random>
+#include <unistd.h>
+#include <thread>
+#include <chrono>
+#include "con2redis.h"
 
 double getRandomNumber(double min, double max) {
     std::random_device rd;
@@ -9,13 +13,53 @@ double getRandomNumber(double min, double max) {
     return dis(gen);
 }
 
-void updateValues(Gtk::Label& label, double min, double max) {
-    double randomValue = getRandomNumber(min, max);
-    label.set_text(Glib::ustring::format(randomValue));
+void redisUpdate(std::mutex* redisMutex, redisContext *c2r, redisReply *reply, char *gluc, char *comp_dose, char *time_str, char *delta_str){
+    while (true){
+        (*redisMutex).lock();
+
+        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "gluc_displ");
+        ReadStreamMsgVal(reply,0,0,1,gluc);
+
+        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "ins_displ");
+        ReadStreamMsgVal(reply,0,0,1, comp_dose);
+
+        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "delta_displ");
+        ReadStreamMsgVal(reply,0,0,1, delta_str);
+
+        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "time_displ");
+        ReadStreamMsgVal(reply,0,0,1, time_str);
+
+        (*redisMutex).unlock();
+        std::this_thread::sleep_for(std::chrono::microseconds(1000));
+    }
 }
 
 int main(int argc, char *argv[]) {
     auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
+
+    redisContext *c2r;
+    redisReply *reply;
+    int pid = getpid();
+    char *gluc;
+    char *comp_dose;
+    char *time_str;
+    char *delta_str;
+
+    std::mutex redisMutex;
+
+    printf("main(): pid %d: user screen: connecting to redis ...\n", pid);
+    c2r = redisConnect("localhost", 6379);
+    printf("main(): pid %d: user screen: connected to redis\n", pid);
+
+    reply = RedisCommand(c2r, "DEL %s", "gluc_displ");
+    reply = RedisCommand(c2r, "DEL %s", "ins_displ");
+    reply = RedisCommand(c2r, "DEL %s", "delta_displ");
+    reply = RedisCommand(c2r, "DEL %s", "time_displ");
+
+    initStreams(c2r, "gluc_displ");
+    initStreams(c2r, "ins_displ");
+    initStreams(c2r, "delta_displ");
+    initStreams(c2r, "time_displ");
 
     Gtk::Window window;
     window.set_default_size(900, 450);
@@ -128,20 +172,20 @@ int main(int argc, char *argv[]) {
 
     window.add(vbox);
 
-    auto updateFunction = [&label1Number, &label2Number, &label3Number, &label4Value]() {
-        updateValues(label1Number, 80, 120);
-        updateValues(label2Number, 60, 100);
-        static bool isVisible1 = true;
-        isVisible1 = !isVisible1;
-        static bool isVisible2 = true;
-        isVisible2 = !isVisible2;
-        label3Number.set_text("time"); 
-        label4Value.set_text("isEating");
+    std::thread redisThread(redisUpdate, &redisMutex, c2r, reply, gluc, comp_dose, time_str, delta_str);
+
+    auto updateFunction = [&label1Number, &label2Number, &label3Number, &label4Value, &gluc, &comp_dose, &time_str, &delta_str, &redisMutex]() {
+        if(redisMutex.try_lock()){
+            label1Number.set_text(gluc);
+            label2Number.set_text(comp_dose);
+            label3Number.set_text(time_str); 
+            label4Value.set_text(delta_str);
+            redisMutex.unlock();
+        }
 
         return true;
     };
-
-    Glib::signal_timeout().connect(updateFunction, 1000);
+    Glib::signal_timeout().connect(updateFunction, 1);
 
     window.show_all();
 
