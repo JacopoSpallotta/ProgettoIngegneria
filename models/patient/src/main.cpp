@@ -1,3 +1,4 @@
+
 #include "main.h"
 
 using namespace std;
@@ -137,6 +138,12 @@ int main(int argc, char *argv[]) {
     Con2DB db("localhost","5432", "insulin_pump", "47002", "logdb_insulin_pump");
     init_logdb(db, pid);
 
+    // stating csv file buffer
+    ofstream csv_g;
+    ofstream csv_i;
+    csv_g.open(G_FNAME);
+    csv_i.open(I_FNAME);
+
     long nseconds = 0;
     char time_str[13];
     time_db(&time_p, time_str);
@@ -175,7 +182,7 @@ int main(int argc, char *argv[]) {
 
         double G_p_new = G_p(gluc_kin,end_gluc,rate_gluc,gluc_util,ren_excr);
         double G_t_new = G_t(gluc_kin,gluc_util);
-        double G_new = G(gluc_kin);
+        char *G_new = G(gluc_kin);
 
         double Qsto1_new = Q_sto_1(dose, delta,rate_gluc);
         double Qsto2_new = Q_sto_2(dose, rate_gluc);
@@ -234,10 +241,21 @@ int main(int argc, char *argv[]) {
         // dummy comms to syncronize environment
         reply = RedisCommand(c2r, "XADD %s * %s %s", DUMMY_ENV_STREAM, "ok", "ok");
         freeReplyObject(reply);
-
+        // LOGGING INTO .CSV
+        if (csv_g.is_open() && csv_i.is_open()){
+            // glucose
+            csv_g << G_new << "," <<  time_str << "\n" << endl;
+            // insulin
+            char u_str[10 + sizeof(char)];
+            std::sprintf(u_str, "%.2f", u); // string cast from double
+            csv_i << u << "," <<  time_str << "\n" << endl;
+        }
+        //
         usleep(1000*T);
     }  // while ()
-    
+
+    csv_g.close();
+    csv_i.close();
     redisFree(c2r);
 }
 
@@ -246,6 +264,8 @@ long get_curr_nsecs(){
     timespec_get(&ts, TIME_UTC);
     return ( (long) (ts.tv_sec * 1000000000L + ts.tv_nsec));
 }
+
+
 
 
 

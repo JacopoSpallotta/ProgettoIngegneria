@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <fstream>
+#include <iostream>
 #include <cmath>
 #include "con2redis.h"
 #include "pgsql.h"
@@ -29,6 +31,8 @@
 #define DEBUG 0
 #define TEST_TIME 10
 #define MINUTES_PER_DAY 1440
+#define G_FNAME "glucose_data.csv"
+#define I_FNAME "insulin_data.csv"
 
 long get_curr_nsecs();
 

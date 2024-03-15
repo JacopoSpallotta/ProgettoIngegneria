@@ -5,20 +5,23 @@ import os
 
 def plot_glucose(d: str):
     # EXPECTED .csv formatted insulin_value,time
-    g = []
+
+    # TODO: Tag per il tipo di dato da plottare
+    #   ES:   glucose, insulin_dose, both
+    d = []
     t = []
     with open(d, "r") as f:
         for li in f:
             line = f.readline().rstrip("\n")
             if line != "":
                 line = line.split(",")
-                g += [int(line[0])]  # should be float
+                d += [int(line[0])]  # should be float
                 t += [int(line[1])]
 
-    pypl.plot(g, t)
-    pypl.title("glucose evolution")
+    pypl.plot(d, t)
+    pypl.title("dlucose evolution")
     pypl.xlabel("t(s)")
-    pypl.ylabel("glucose(mg/dL)")
+    pypl.ylabel("dlucose(mg/dL)")
     pypl.show()
 
     return
