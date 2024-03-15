@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
     redisContext *c2r;
     redisReply *reply;
     int pid = getpid();
-    char *gluc;
-    char *comp_dose;
-    char *time_str;
-    char *delta_str;
+    char gluc[10];
+    char comp_dose[10];
+    char time_str[10];
+    char delta_str[10];
 
     std::mutex redisMutex;
 

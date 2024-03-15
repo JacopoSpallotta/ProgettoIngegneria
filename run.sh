@@ -16,7 +16,7 @@ cd ../../environment/bin
 ./main &
 
 cd ../../../InsulinePumpDisplay
-#./insulinePumpDisplay
+./insulinePumpDisplay
 
 wait
 
