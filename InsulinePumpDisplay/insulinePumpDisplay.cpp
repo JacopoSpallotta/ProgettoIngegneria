@@ -17,6 +17,24 @@ void updateValues(Gtk::Label& label, double min, double max) {
 int main(int argc, char *argv[]) {
     auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
 
+    redisContext *c2r;
+    redisReply *reply;
+    int pid = getpid();
+
+    printf("main(): pid %d: user screen: connecting to redis ...\n", pid);
+    c2r = redisConnect("localhost", 6379);
+    printf("main(): pid %d: user screen: connected to redis\n", pid);
+
+    reply = RedisCommand(c2r, "DEL %s", "gluc_displ");
+    reply = RedisCommand(c2r, "DEL %s", "ins_displ");
+    reply = RedisCommand(c2r, "DEL %s", "delta_displ");
+    reply = RedisCommand(c2r, "DEL %s", "time_displ");
+
+    initStreams(c2r, "gluc_displ");
+    initStreams(c2r, "ins_displ");
+    initStreams(c2r, "delta_displ");
+    initStreams(c2r, "time_displ");
+
     Gtk::Window window;
     window.set_default_size(900, 450);
     window.override_background_color(Gdk::RGBA("#2e3436"), Gtk::STATE_FLAG_NORMAL);
