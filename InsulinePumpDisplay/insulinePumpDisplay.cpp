@@ -14,57 +14,6 @@ void updateValues(Gtk::Label& label, double min, double max) {
     label.set_text(Glib::ustring::format(randomValue));
 }
 
-void getPersonalInfo(std::string& name, int& age, double& weight, std::string& gender, double& height) {
-    
-    Gtk::Dialog dialog("Inserisci le informazioni personali", true);
-    dialog.set_default_size(300, 200);
-
-    Gtk::Box* contentArea = dialog.get_content_area();
-
-    Gtk::Label label_name("Nome:");
-    Gtk::Entry entry_name;
-    contentArea->pack_start(label_name, Gtk::PACK_SHRINK);
-    contentArea->pack_start(entry_name, Gtk::PACK_SHRINK);
-
-    Gtk::Label label_age("Età:");
-    Gtk::SpinButton spin_age;
-    spin_age.set_range(0, 120);
-    contentArea->pack_start(label_age, Gtk::PACK_SHRINK);
-    contentArea->pack_start(spin_age, Gtk::PACK_SHRINK);
-
-    Gtk::Label label_weight("Peso:");
-    Gtk::SpinButton spin_weight;
-    spin_weight.set_range(0, 500);
-    contentArea->pack_start(label_weight, Gtk::PACK_SHRINK);
-    contentArea->pack_start(spin_weight, Gtk::PACK_SHRINK);
-
-    Gtk::Label label_gender("Sesso:");
-    Gtk::ComboBoxText combo_gender;
-    combo_gender.append("Maschio");
-    combo_gender.append("Femmina");
-    contentArea->pack_start(label_gender, Gtk::PACK_SHRINK);
-    contentArea->pack_start(combo_gender, Gtk::PACK_SHRINK);
-
-    Gtk::Label label_height("Altezza (cm):");
-    Gtk::SpinButton spin_height;
-    spin_height.set_range(0, 300);
-    contentArea->pack_start(label_height, Gtk::PACK_SHRINK);
-    contentArea->pack_start(spin_height, Gtk::PACK_SHRINK);
-
-    dialog.add_button("OK", Gtk::RESPONSE_OK);
-    dialog.show_all();
-
-    int result = dialog.run();
-
-    if (result == Gtk::RESPONSE_OK) {
-        name = entry_name.get_text();
-        age = static_cast<int>(spin_age.get_value());
-        weight = spin_weight.get_value();
-        gender = combo_gender.get_active_text();
-        height = spin_height.get_value();
-    }
-}
-
 int main(int argc, char *argv[]) {
     auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
 
