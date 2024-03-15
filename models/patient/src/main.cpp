@@ -247,11 +247,11 @@ int main(int argc, char *argv[]) {
             // glucose
             char g_str[10];
             sprintf(g_str, "%.2f", G_new); // string cast from double
-            csv_g << g_str << "," <<  time_str << "\n";
+            csv_g << g_str << "," <<  time_str <<endl;
             // insulin
             char u_str[10];
             sprintf(u_str, "%.2f", u); // string cast from double
-            csv_i << u_str << "," <<  time_str << "\n";
+            csv_i << u_str << "," <<  time_str <<endl;
         }
         //
         usleep(1000*T);
