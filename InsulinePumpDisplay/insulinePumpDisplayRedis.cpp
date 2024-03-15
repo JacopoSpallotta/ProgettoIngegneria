@@ -17,7 +17,7 @@ void updateValues(Gtk::Label& label, double val, double min, double max) {
     label.set_text(Glib::ustring::format(val));
 }
 
-void getPersonalInfo(std::string& name, int& age, double& weight, std::string& gender, double& height) {
+/* void getPersonalInfo(std::string& name, int& age, double& weight, std::string& gender, double& height) {
     Gtk::Dialog dialog("Inserisci le informazioni personali", true);
     dialog.set_default_size(300, 200);
 
@@ -65,7 +65,7 @@ void getPersonalInfo(std::string& name, int& age, double& weight, std::string& g
         gender = combo_gender.get_active_text();
         height = spin_height.get_value();
     }
-}
+} */
 
 int main(int argc, char *argv[]) {
     auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
@@ -86,11 +86,6 @@ int main(int argc, char *argv[]) {
     initStreams(c2r, "ins_displ");
     initStreams(c2r, "delta_displ");
     initStreams(c2r, "time_displ");
-
-    std::string name, gender;
-    int age;
-    double weight, height;
-    getPersonalInfo(name, age, weight, gender, height);
 
     Gtk::Window window;
     window.set_default_size(900, 450);
@@ -114,7 +109,7 @@ int main(int argc, char *argv[]) {
     fontDescription.set_family("DS-Digital");
     fontDescription.set_size(25 * PANGO_SCALE);
 
-    Gtk::Label label_name(name);
+    /* Gtk::Label label_name(name);
     label_name.override_font(fontDescription);
     label_name.override_color(Gdk::RGBA("#a8af7b"));
     grid.attach(label_name, 0, 0);
@@ -138,7 +133,7 @@ int main(int argc, char *argv[]) {
     Gtk::Label label_height(std::to_string(static_cast<int>(height)) + " cm");  // Conversione a intero
     label_height.override_font(fontDescription);
     label_height.override_color(Gdk::RGBA("#a8af7b"));
-    grid.attach(label_height, 4, 0);
+    grid.attach(label_height, 4, 0); */
 
     vbox.pack_start(grid, Gtk::PACK_SHRINK);
 
@@ -184,7 +179,7 @@ int main(int argc, char *argv[]) {
 
     Gtk::Box group3(Gtk::ORIENTATION_VERTICAL, 0);
 
-    Gtk::Label label3("Values");
+    /*Gtk::Label label3("Values");
     label3.set_size_request(900, 30); 
 
     Pango::FontDescription fontDescription3;
@@ -200,7 +195,7 @@ int main(int argc, char *argv[]) {
     label3Number.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
     group3.pack_start(label3, Gtk::PACK_SHRINK);
-    group3.pack_start(label3Number, Gtk::PACK_SHRINK);
+    group3.pack_start(label3Number, Gtk::PACK_SHRINK);*/
 
     // Aggiunta delle immagini lampeggianti con dimensioni ridotte
     Gtk::Image image1, image2;
@@ -248,8 +243,8 @@ int main(int argc, char *argv[]) {
 
         cout<<glucose_level<<" "<<dose<<" "<<delta<<" "<<time_str<<endl;
 
-        updateValues(label1Number, glucose_level, 0,0); // Imposta i valori desiderati per glucosio
-        updateValues(label2Number, dose, 0 , 100); // Imposta i valori desiderati per insulina
+        updateValues(label1Number, glucose_level, 80,100); // Imposta i valori desiderati per glucosio
+        updateValues(label2Number, dose, 80 , 100); // Imposta i valori desiderati per insulina
 
         // Alternare la visibilità delle immagini (lampeggiamento)
         static bool isVisible1 = true;
@@ -263,7 +258,7 @@ int main(int argc, char *argv[]) {
     };
 
     // Chiamata a updateFunction ogni 1000 millisecondi (1 secondo)
-    Glib::signal_timeout().connect(updateFunction, 1);
+    Glib::signal_timeout().connect(updateFunction, 1000);
 
     window.show_all();
 
