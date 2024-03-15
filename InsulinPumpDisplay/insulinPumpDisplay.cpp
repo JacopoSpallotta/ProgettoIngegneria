@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
     char gluc[10];
     char comp_dose[10];
     char time_str[10];
-    char delta_str[10];
+    char delta_str[20];
 
     std::mutex redisMutex;
 
