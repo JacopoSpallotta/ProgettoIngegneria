@@ -1,8 +1,7 @@
 #!/bin/bash
 
-cd models
 
-make
+cd models
 
 cd patient/bin
 ./main 1 50 100 180 &
@@ -15,10 +14,7 @@ cd ../../insulin_pump/bin
 cd ../../environment/bin
 ./main &
 
-cd ../../../InsulinePumpDisplay
-./insulinePumpDisplay
-
 wait
 
-cd ../models/monitors/bin
+cd ../../monitors/bin
 ./main

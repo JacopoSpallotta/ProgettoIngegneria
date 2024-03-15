@@ -21,10 +21,16 @@ void redisUpdate(std::mutex* redisMutex, redisContext *c2r, redisReply *reply, c
         ReadStreamMsgVal(reply,0,0,1,gluc);
 
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "ins_displ");
-        ReadStreamMsgVal(reply,0,0,1, comp_dose);
+        ReadStreamMsgVal(reply,0,0,1, comp_dose);        
 
+        char delta_int[10];
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "delta_displ");
-        ReadStreamMsgVal(reply,0,0,1, delta_str);
+        ReadStreamMsgVal(reply,0,0,1, delta_int);
+        if(strcmp(delta_int, "0") == 0){
+            sprintf(delta_str, "Not eating");
+        }else{
+            sprintf(delta_str, "Eating");
+        }
 
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "time_displ");
         ReadStreamMsgVal(reply,0,0,1, time_str);
@@ -115,7 +121,7 @@ int main(int argc, char *argv[]) {
     label2.override_font(fontDescription2);
     label2.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    Gtk::Label label2Number("80");
+    Gtk::Label label2Number("0");
     label2Number.set_size_request(450, 150);
     fontDescription2.set_size(100 * PANGO_SCALE);
     label2Number.override_font(fontDescription2);

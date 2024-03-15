@@ -6,7 +6,7 @@ MONITORDIR = monitors/src
 CON2REDISDIR = ../con2redis/src
 CON2DBDIR = ../con2db
 TIMEDIR = time/src
-SCREENDIR = ../InsulinePumpDisplay
+SCREENDIR = ../InsulinPumpDisplay
 
 SUBDIRS = $(CON2REDISDIR) $(CON2DBDIR) $(TIMEDIR) $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR) $(MONITORDIR) $(SCREENDIR)
 
