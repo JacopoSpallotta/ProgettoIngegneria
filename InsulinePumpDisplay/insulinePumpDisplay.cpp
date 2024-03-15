@@ -12,9 +12,9 @@ double getRandomNumber(double min, double max) {
     return dis(gen);
 }
 
-void updateValues(Gtk::Label& label, double val, double min, double max) {
+void updateValues(Gtk::Label& label, double min, double max) {
     double randomValue = getRandomNumber(min, max);
-    label.set_text(Glib::ustring::format(val));
+    label.set_text(Glib::ustring::format(randomValue));
 }
 
 void getPersonalInfo(std::string& name, int& age, double& weight, std::string& gender, double& height) {
@@ -69,7 +69,7 @@ void getPersonalInfo(std::string& name, int& age, double& weight, std::string& g
 
 int main(int argc, char *argv[]) {
     auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-    redisContext *c2r;
+    /*redisContext *c2r;
     redisReply *reply;
     int pid = getpid();
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     initStreams(c2r, "gluc_displ");
     initStreams(c2r, "ins_displ");
     initStreams(c2r, "delta_displ");
-    initStreams(c2r, "time_displ");
+    initStreams(c2r, "time_displ");*/
 
     std::string name, gender;
     int age;
@@ -226,8 +226,8 @@ int main(int argc, char *argv[]) {
     window.add(vbox);
 
     // Funzione di aggiornamento che verrà chiamata ogni secondo
-    auto updateFunction = [&label1Number, &label2Number, &image1, &image2, &reply, &c2r]() {
-        reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "gluc_displ");
+    auto updateFunction = [&label1Number, &label2Number, &image1, &image2](){//, &reply, &c2r]() {
+        /*reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "gluc_displ");
         char *gluc = new char[64];
         ReadStreamMsgVal(reply,0,0,1,gluc);
         double glucose_level = stod(gluc);
@@ -246,10 +246,10 @@ int main(int argc, char *argv[]) {
         char* time_str = new char[64];
         ReadStreamMsgVal(reply,0,0,1, time_str);
 
-        cout<<glucose_level<<" "<<dose<<" "<<delta<<" "<<time_str<<endl;
+        cout<<glucose_level<<" "<<dose<<" "<<delta<<" "<<time_str<<endl;*/
 
-        updateValues(label1Number, glucose_level, 0,0); // Imposta i valori desiderati per glucosio
-        updateValues(label2Number, dose, 0 , 100); // Imposta i valori desiderati per insulina
+        updateValues(label1Number , 0,0); // Imposta i valori desiderati per glucosio
+        updateValues(label2Number, 0 , 100); // Imposta i valori desiderati per insulina
 
         // Alternare la visibilità delle immagini (lampeggiamento)
         static bool isVisible1 = true;
