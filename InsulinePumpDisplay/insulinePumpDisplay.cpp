@@ -80,36 +80,63 @@ int main(int argc, char *argv[]) {
     group2.pack_start(label2, Gtk::PACK_SHRINK);
     group2.pack_start(label2Number, Gtk::PACK_SHRINK);
 
-    Gtk::Box group3(Gtk::ORIENTATION_VERTICAL, 0);
+    Gtk::Box group3(Gtk::ORIENTATION_HORIZONTAL, 0);
 
-    Gtk::Image image1, image2;
-    Glib::RefPtr<Gdk::Pixbuf> originalPixbuf1 = Gdk::Pixbuf::create_from_file("./icon.png");
-    Glib::RefPtr<Gdk::Pixbuf> originalPixbuf2 = Gdk::Pixbuf::create_from_file("./heart.png");
+    Gtk::Label label3("Time");
+    label3.set_size_request(450, 30);
 
-    Glib::RefPtr<Gdk::Pixbuf> scaledPixbuf1 = originalPixbuf1->scale_simple(64, 64, Gdk::INTERP_BILINEAR);
-    Glib::RefPtr<Gdk::Pixbuf> scaledPixbuf2 = originalPixbuf2->scale_simple(64, 64, Gdk::INTERP_BILINEAR);
+    Pango::FontDescription fontDescription3;
+    fontDescription3.set_family("DS-Digital");
+    fontDescription3.set_size(50 * PANGO_SCALE);
+    label3.override_font(fontDescription3);
+    label3.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    image1.set(scaledPixbuf1);
-    image2.set(scaledPixbuf2);
+    Gtk::Label label3Number("12:00");
+    label3Number.set_size_request(450, 150);  
+    fontDescription3.set_size(100 * PANGO_SCALE);
+    label3Number.override_font(fontDescription3);
+    label3Number.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    group3.pack_start(image1, Gtk::PACK_SHRINK);
-    group3.pack_start(image2, Gtk::PACK_SHRINK);
+    group3.pack_start(label3, Gtk::PACK_SHRINK);
+    group3.pack_start(label3Number, Gtk::PACK_SHRINK);
 
     vbox.pack_start(group1, Gtk::PACK_SHRINK);
     vbox.pack_start(group2, Gtk::PACK_SHRINK);
     vbox.pack_start(group3, Gtk::PACK_SHRINK);
 
+    Gtk::Box group4(Gtk::ORIENTATION_HORIZONTAL, 0);
+
+    Gtk::Label label4("Stato");
+    label4.set_size_request(450, 30);
+
+    Pango::FontDescription fontDescription4;
+    fontDescription4.set_family("DS-Digital");
+    fontDescription4.set_size(50 * PANGO_SCALE);
+    label4.override_font(fontDescription4);
+    label4.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
+
+    Gtk::Label label4Value("True");
+    label4Value.set_size_request(450, 150);  
+    fontDescription4.set_size(100 * PANGO_SCALE);
+    label4Value.override_font(fontDescription4);
+    label4Value.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
+
+    group4.pack_start(label4, Gtk::PACK_SHRINK);
+    group4.pack_start(label4Value, Gtk::PACK_SHRINK);
+
+    vbox.pack_start(group4, Gtk::PACK_SHRINK);
+
     window.add(vbox);
 
-    auto updateFunction = [&label1Number, &label2Number, &image1, &image2]() {
+    auto updateFunction = [&label1Number, &label2Number, &label3Number, &label4Value]() {
         updateValues(label1Number, 80, 120);
         updateValues(label2Number, 60, 100);
         static bool isVisible1 = true;
         isVisible1 = !isVisible1;
-        image1.set_visible(isVisible1);
         static bool isVisible2 = true;
         isVisible2 = !isVisible2;
-        image2.set_visible(isVisible2);
+        label3Number.set_text("time"); 
+        label4Value.set_text("isEating");
 
         return true;
     };
