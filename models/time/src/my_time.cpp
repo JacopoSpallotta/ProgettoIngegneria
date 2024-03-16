@@ -22,8 +22,11 @@ bool check_time(struct time* curr_time, int min, int target){
 
 void time_db(struct time* curr_time, char* time_str){
     tm t{};
+    double epsilon = pow(10,-5);
+
     double minutes;
-    double decimal = modf(curr_time -> minutes, &minutes);
+    double decimal = modf((abs(round(curr_time -> minutes) - curr_time -> minutes) <= epsilon) ? round(curr_time -> minutes) : curr_time -> minutes, &minutes);
+    //double decimal = modf(curr_time -> minutes, &minutes);
     int hours = (int) minutes / 60;
     int minutes_mod = (int) minutes % 60;
     int milliseconds_temp = decimal * (1000 * 60);

@@ -31,8 +31,8 @@
 #define DEBUG 0
 #define TEST_TIME 10
 #define MINUTES_PER_DAY 1440
-#define G_FNAME "./glucose_data.csv"
-#define I_FNAME "./insulin_data.csv"
+#define G_FNAME "../../../python-scripts/glucose_data.csv"
+#define I_FNAME "../../../python-scripts/insulin_data.csv"
 
 long get_curr_nsecs();
 

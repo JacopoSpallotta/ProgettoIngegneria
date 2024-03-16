@@ -13,23 +13,25 @@ double getRandomNumber(double min, double max) {
     return dis(gen);
 }
 
-void redisUpdate(std::mutex* redisMutex, redisContext *c2r, redisReply *reply, char *gluc, char *comp_dose, char *time_str, char *delta_str){
+void redisUpdate(std::mutex* redisMutex, redisContext *c2r, redisReply *reply, char* gluc, char* comp_dose, char *time_str, char *delta_str){
     while (true){
         (*redisMutex).lock();
 
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "gluc_displ");
         ReadStreamMsgVal(reply,0,0,1,gluc);
 
+        char dose[10];
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "ins_displ");
-        ReadStreamMsgVal(reply,0,0,1, comp_dose);        
+        ReadStreamMsgVal(reply,0,0,1, dose);
+        sprintf(comp_dose,"%s", strtok(dose, "."));
 
         char delta_int[10];
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "delta_displ");
         ReadStreamMsgVal(reply,0,0,1, delta_int);
         if(strcmp(delta_int, "0") == 0){
-            sprintf(delta_str, "Not eating");
+            strcpy(delta_str, "Not eating");
         }else{
-            sprintf(delta_str, "Eating");
+            strcpy(delta_str, "Eating");
         }
 
         reply = RedisCommand(c2r, "XREADGROUP GROUP diameter screen COUNT 1 BLOCK 10000000000 NOACK STREAMS %s >", "time_displ");
@@ -46,10 +48,10 @@ int main(int argc, char *argv[]) {
     redisContext *c2r;
     redisReply *reply;
     int pid = getpid();
-    char gluc[10];
-    char comp_dose[10];
-    char time_str[10];
-    char delta_str[20];
+    char* gluc = (char*) malloc(10 * sizeof(char));
+    char* comp_dose = (char*) malloc(10 * sizeof(char));
+    char* time_str = (char*) malloc(10 * sizeof(char));
+    char* delta_str = (char*) malloc(20 * sizeof(char));
 
     std::mutex redisMutex;
 
@@ -69,7 +71,7 @@ int main(int argc, char *argv[]) {
 
     Gtk::Window window;
     window.set_default_size(900, 450);
-    window.override_background_color(Gdk::RGBA("#2e3436"), Gtk::STATE_FLAG_NORMAL);
+    window.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
     window.set_border_width(10);
 
     Glib::RefPtr<Gtk::CssProvider> cssProvider = Gtk::CssProvider::create();
@@ -101,7 +103,7 @@ int main(int argc, char *argv[]) {
     label1.override_font(fontDescription1);
     label1.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    Gtk::Label label1Number("Staring");
+    Gtk::Label label1Number("Starting");
     label1.set_width_chars(10); 
     fontDescription1.set_size(100 * PANGO_SCALE);
     label1Number.override_font(fontDescription1);
@@ -184,7 +186,7 @@ int main(int argc, char *argv[]) {
         if(redisMutex.try_lock()){
             label1Number.set_text(gluc);
             label2Number.set_text(comp_dose);
-            label3Number.set_text(time_str); 
+            label3Number.set_text(time_str);
             label4Value.set_text(delta_str);
             redisMutex.unlock();
         }
