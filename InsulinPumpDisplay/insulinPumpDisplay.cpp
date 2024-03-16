@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
     Gtk::Box group1(Gtk::ORIENTATION_HORIZONTAL, 0); 
 
     Gtk::Label label1("Glucose");
-    label1.set_size_request(450, 30);
+    label1.set_width_chars(10);
 
     Pango::FontDescription fontDescription1;
     fontDescription1.set_family("DS-Digital");
@@ -101,8 +101,8 @@ int main(int argc, char *argv[]) {
     label1.override_font(fontDescription1);
     label1.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    Gtk::Label label1Number("120");
-    label1Number.set_size_request(450, 150);  
+    Gtk::Label label1Number("Staring");
+    label1.set_width_chars(10); 
     fontDescription1.set_size(100 * PANGO_SCALE);
     label1Number.override_font(fontDescription1);
     label1Number.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
     Gtk::Box group2(Gtk::ORIENTATION_HORIZONTAL, 0);
 
     Gtk::Label label2("Insulin");
-    label2.set_size_request(450, 30);  
+    label2.set_width_chars(10);
 
     Pango::FontDescription fontDescription2;
     fontDescription2.set_family("DS-Digital");
@@ -121,8 +121,8 @@ int main(int argc, char *argv[]) {
     label2.override_font(fontDescription2);
     label2.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    Gtk::Label label2Number("0");
-    label2Number.set_size_request(450, 150);
+    Gtk::Label label2Number("Starting");
+    label2.set_width_chars(10);
     fontDescription2.set_size(100 * PANGO_SCALE);
     label2Number.override_font(fontDescription2);
     label2Number.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
     Gtk::Box group3(Gtk::ORIENTATION_HORIZONTAL, 0);
 
     Gtk::Label label3("Time");
-    label3.set_size_request(450, 30);
+    label3.set_width_chars(10);
 
     Pango::FontDescription fontDescription3;
     fontDescription3.set_family("DS-Digital");
@@ -141,8 +141,8 @@ int main(int argc, char *argv[]) {
     label3.override_font(fontDescription3);
     label3.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    Gtk::Label label3Number("12:00");
-    label3Number.set_size_request(450, 150);  
+    Gtk::Label label3Number("Starting");
+    label3.set_width_chars(10); 
     fontDescription3.set_size(100 * PANGO_SCALE);
     label3Number.override_font(fontDescription3);
     label3Number.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
     Gtk::Box group4(Gtk::ORIENTATION_HORIZONTAL, 0);
 
     Gtk::Label label4("Stato");
-    label4.set_size_request(450, 30);
+    label4.set_width_chars(10);
 
     Pango::FontDescription fontDescription4;
     fontDescription4.set_family("DS-Digital");
@@ -165,8 +165,8 @@ int main(int argc, char *argv[]) {
     label4.override_font(fontDescription4);
     label4.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
 
-    Gtk::Label label4Value("True");
-    label4Value.set_size_request(450, 150);  
+    Gtk::Label label4Value("Starting");
+    label4.set_width_chars(10);  
     fontDescription4.set_size(100 * PANGO_SCALE);
     label4Value.override_font(fontDescription4);
     label4Value.override_background_color(Gdk::RGBA("#a8af7b"), Gtk::STATE_FLAG_NORMAL);
