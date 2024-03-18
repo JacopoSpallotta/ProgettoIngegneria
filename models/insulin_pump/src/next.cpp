@@ -15,7 +15,7 @@ insulin_pump_state next(Insulin_Pump& pump, redisContext *c2r, double curr_t, st
         pump.prev_glucose = pump.glucose_level;
         pump.glucose_level = glucose_level;
 
-        return execution;
+        return compute_release;
     }else if(pump.state == idle){
         if( check_time(time_p, TEST_TIME, 0)){
             return test;
@@ -37,14 +37,10 @@ double compute_dose(double prev_prev_glucose, double prev_glucose, double glucos
     if (glucose_level >= HARD_MAX_GLUCOSE){
         comp_dose = round((glucose_level-TARGET_GLUCOSE));
 
-    } else if(glucose_level >= SAFE_MIN_GLUCOSE && glucose_level <= SAFE_MAX_GLUCOSE){
-        if(glucose_level > prev_glucose && (curr_delta >= old_delta)){
-            comp_dose = round((glucose_level-TARGET_GLUCOSE));
-
-            if(comp_dose <= 0){
-                comp_dose = MINDOSE;
-            }
+        if(comp_dose <= 0){
+            comp_dose = MINDOSE;
         }
+
     } else if (glucose_level > SAFE_MAX_GLUCOSE){
         if (glucose_level > prev_glucose){
             comp_dose = round((glucose_level-TARGET_GLUCOSE));
@@ -55,19 +51,20 @@ double compute_dose(double prev_prev_glucose, double prev_glucose, double glucos
         }else if( (glucose_level == prev_glucose) || (glucose_level < prev_glucose && curr_delta > old_delta)){
             comp_dose = MINDOSE;
         }
+
+    } else if(glucose_level >= SAFE_MIN_GLUCOSE && glucose_level <= SAFE_MAX_GLUCOSE){
+        if(glucose_level > prev_glucose && (curr_delta >= old_delta)){
+            comp_dose = round((glucose_level-TARGET_GLUCOSE));
+
+            if(comp_dose <= 0){
+                comp_dose = MINDOSE;
+            }
+        }
     }
 
     if (comp_dose > 9){
         comp_dose = 9;
     }
-
-    /*cout<<"\tCurr_delta: "<<curr_delta<<endl;
-    cout<<"\tOld_delta: "<<old_delta<<endl;
-    cout<<"\tGlucose_level: "<<glucose_level<<endl;
-    cout<<"\tPrev_glucose: "<<prev_glucose<<endl;
-    cout<<"\tPrev_prev_glucose: "<<prev_prev_glucose<<endl;
-    cout<<"\tComp dose: "<<comp_dose<<endl;
-    cout<<"]\n"<<endl;*/
 
     return comp_dose;
 }

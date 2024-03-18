@@ -33,9 +33,6 @@ CREATE TABLE IF NOT EXISTS TimeVar (
     varinfo String4Info NOT NULL
 );
 
--- Timescaledb extension for time series
--- Do not forget to create timescaledb extension
--- CREATE EXTENSION timescaledb;
 
 CREATE TABLE IF NOT EXISTS LogTable (
     nanosec bigint NOT NULL,		-- nanseconds after second

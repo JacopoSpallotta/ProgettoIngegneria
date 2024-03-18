@@ -9,6 +9,7 @@ TIMEDIR = time/src
 SCREENDIR = ../InsulinPumpDisplay
 
 SUBDIRS = $(CON2REDISDIR) $(CON2DBDIR) $(TIMEDIR) $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR) $(MONITORDIR) $(SCREENDIR)
+NODISP = $(CON2REDISDIR) $(CON2DBDIR) $(TIMEDIR) $(ENVIDIR) $(INSLPMPIDIR) $(PATIDIR) $(MONITORDIR)
 
 all:
 	@echo ""
@@ -17,6 +18,11 @@ all:
 	@echo "######################################";
 	@echo ""
 	for i in $(SUBDIRS) ; \
+	  do (cd $$i ; $(MAKE) ) ; \
+	done
+
+no_disp:
+	for i in $(NODISP) ; \
 	  do (cd $$i ; $(MAKE) ) ; \
 	done
 

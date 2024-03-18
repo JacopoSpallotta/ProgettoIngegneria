@@ -1,10 +1,14 @@
 #!/bin/bash
 
+SEX=1
+AGE=50
+WEIGHT=80
+HEIGHT=180
 
 cd models
 
 cd patient/bin
-./main 1 50 100 180 &
+./main $SEX $AGE $WEIGHT $HEIGHT &
 
 sleep 0.5
 

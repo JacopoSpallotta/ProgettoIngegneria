@@ -26,11 +26,10 @@ void log2db(Con2DB db1, int pid, long int nanosec, char* t, insulin_pump_state p
         sprintf(pump_state_str, "test");
         break;
     case 2:
-        sprintf(pump_state_str, "execution");
+        sprintf(pump_state_str, "compute_release");
         break;
     }
 
-    //TODO: Add alert state 
 
 
     sprintf(sqlcmd, "BEGIN"); 

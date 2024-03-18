@@ -11,11 +11,6 @@ int main() {
 
     struct time time_p = {0};
     
-   /* printf("%d\n",pid);
-    int ciao = 0;
-    while(ciao == 0){
-        sleep(5);
-    }*/
     /*  prg  */
 
     #if (DEBUG > 0)

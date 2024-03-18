@@ -11,12 +11,7 @@ int main() {
     unsigned seed;
 
     struct time time_p = {0};
-    
-    /*printf("%d\n",pid);
-    int ciao = 0;
-    while(ciao == 0){
-        sleep(5);
-    }*/
+
     /*  prg  */
 
     #if (DEBUG > 0)
@@ -62,7 +57,7 @@ int main() {
     while (get_time(&time_p) <= MINUTES_PER_DAY){
         long nseconds_diff = get_curr_nsecs() - nseconds;
         double comp_dose = 0;
-        if(pump.state == execution){
+        if(pump.state == compute_release){
             comp_dose = compute_dose(pump.prev_prev_glucose, pump.prev_glucose, pump.glucose_level);
         }
         insulin_pump_state next_state = next(pump, c2r, get_time(&time_p), &time_p, comp_dose);
@@ -71,6 +66,7 @@ int main() {
         update_time(&time_p);
         time_db(&time_p, &time_str[0]);
         log2db(db, pid, nseconds_diff, time_str, pump.state, comp_dose);
+        
         usleep(1000*T);
     }  // while ()
 

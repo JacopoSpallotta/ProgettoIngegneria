@@ -14,7 +14,7 @@ double ISR_s(double Vc, glucose_kinetics_old gluc_old, insulin_cpeptide_old cpep
 
 // A21
 double ISR_d(double Vc, glucose_kinetics_old gluc_old){
-    double dG = (G(gluc_old) - gluc_old.G) / T; // TODO vedere ordine esecuzione G e ISR
+    double dG = (G(gluc_old) - gluc_old.G) / T; 
     double curr_isr_d = 0;
     if(dG >= 0){
         curr_isr_d = Vc * PHId * dG;
