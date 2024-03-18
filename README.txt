@@ -32,3 +32,6 @@ Esecuzione:
     
     - Versione senza display:
       avviare il file ./run.sh
+
+    Per modificare Sesso, Età, Peso e Altezza del paziente modificare
+    variabili nel file run.sh
