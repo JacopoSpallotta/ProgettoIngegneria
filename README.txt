@@ -2,7 +2,6 @@ Prerequisiti:
     -redis
     -compiler g++
     -Postgresql
-    -librerie con2redis e con2db
 
     (Opzionale)
     - Se si vuole avviare anche il display è necessario Gtkmm 3.0,
@@ -10,17 +9,18 @@ Prerequisiti:
       sudo apt install libgtkmm-3.0-dev
       sudo apt install libgstreamermm-1.0-dev
       Per il font basta fare doppio click sul file DS-DIGIT.TTF
+
     - Altrimenti è possibile eseguire il programma senza e leggere i print da console
 
 Compilazione:
 
     - Versione display: 
       Spostarsi nella cartella models:
-      Esesguire comando: make
+        Eseguire comando: make
 
     - Versione senza display:
       Spostarsi nella cartella models:
-      Eseguire comando: make no_disp
+        Eseguire comando: make no_disp
 
     make clean per eliminare file oggetto e binari
 
@@ -35,3 +35,4 @@ Esecuzione:
 
     Per modificare Sesso, Età, Peso e Altezza del paziente modificare
     variabili nel file run.sh
+    
